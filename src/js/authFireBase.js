@@ -22,25 +22,17 @@ import {
 
 import { spinnerStart, spinnerStop } from './loader';
 import { onWatchedBtnClick } from './my-library-watched-queue/queueWatchAuthFunc.js';
-//data-template-local-storage.js////////////////////////////
-//import { userDataWatched, userDataQueue } from "./my-library-watched-queue/data-template-local-storage.js"
+import {
+  getValueFromLocalStorage,
+  setValueInLocalStorage,
+} from './utils/localStorage.js';
+import { userIcon, lockIcon } from './utils/markup.js';
 
 export let currentUID = '';
 
 //btn header switch
 
-const svg2 = ` <svg width="35" height="35"  viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" aria-label="кнопка авторизації">
-   <path
-                d="M30,49c0,18.7,15.3,34,34,34s34-15.3,34-34S82.7,15,64,15S30,30.3,30,49z M90,49c0,14.3-11.7,26-26,26S38,63.3,38,49   s11.7-26,26-26S90,34.7,90,49z" />
-            <path
-                d="M24.4,119.4C35,108.8,49,103,64,103s29,5.8,39.6,16.4l5.7-5.7C97.2,101.7,81.1,95,64,95s-33.2,6.7-45.3,18.7L24.4,119.4z" />
-</svg>`;
-const svg1 = ` <svg width="30" height="30"  viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-label="кнопка авторизації">
-     <path
-                d="M6.4 12.8V9.6C6.4 4.298 10.698 0 16 0s9.6 4.298 9.6 9.6v3.2h1.6a3.2 3.2 0 0 1 3.2 3.2v12.8a3.2 3.2 0 0 1-3.2 3.2H4.8a3.2 3.2 0 0 1-3.2-3.2V16c0-1.76 1.44-3.2 3.2-3.2h1.6zm8 10.768V27.2h3.2v-3.632a3.205 3.205 0 0 0 1.6-2.771 3.2 3.2 0 1 0-4.815 2.763l.015.008zM11.2 9.6v3.2h9.6V9.6a4.8 4.8 0 1 0-9.6 0z" />
-</svg>`;
-
-const useEl = document.querySelector('[data-switch]');
+const userAvatar = document.querySelector('[data-switch]');
 const watchedBtnEl2 = document.querySelector('.js-library-btn--watched');
 const queueBtnEl2 = document.querySelector('.js-library-btn--queue');
 const movieListEl2 = document.querySelector('.movie-list');
@@ -49,12 +41,17 @@ const backdrop = document.querySelector('.backdrop-modal-login');
 const btnLogOut = document.querySelector('.btn-log-out');
 const btnSign = document.querySelector('.btn-sign');
 const btnLogin = document.querySelector('.btn-login');
-const login = document.querySelector('.user_login');
-const password = document.querySelector('.user_password');
+const signupNameEl = document.querySelector('.signup .user_name');
+const signupEmailEl = document.querySelector('.signup .user_login');
+const signupPasswordEl = document.querySelector('.signup .user_password');
+const signinEmailEl = document.querySelector('.login .user_login');
+const signinPasswordEl = document.querySelector('.login .user_password');
+
 const form = document.querySelector('#auth-form');
 const headerContainer = document.querySelector('.header__link-container');
 const profile = document.querySelector('#profile');
-const profileName = document.querySelector('.profile__name');
+const profileUserEmail = document.querySelector('.profile-window__email');
+const profileUserName = document.querySelector('.profile-window__user');
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyCCtjOeYUGfFakMk9BInb8D18c_-yBX2Oc',
@@ -77,20 +74,20 @@ onAuthStateChanged(auth, async user => {
     profile.classList.remove('disabled'); //
     backdrop.classList.add('is-hidden');
     currentUID = user.uid;
-    useEl.innerHTML = svg2;
+    userAvatar.innerHTML = userIcon;
+
     try {
-      const rez = await readAllUserData(currentUID);
-      profileName.textContent = rez.userLogin;
+      profileUserEmail.textContent = user.email;
     } catch {}
   } else {
     currentUID = '';
-    profileName.textContent = '';
+    profileUserEmail.textContent = '';
 
     btnLogOut.classList.add('hide'); //
     form.classList.remove('hide'); //
     headerContainer.classList.add('isOverflowHidden');
     profile.classList.add('disabled'); //
-    useEl.innerHTML = svg1;
+    userAvatar.innerHTML = lockIcon;
   }
 });
 btnSign.addEventListener('click', signUpUser);
@@ -160,57 +157,37 @@ function showLoginEror(error) {
 // _______  Registaration functions_____________________//
 async function signUpUser(event) {
   event.preventDefault();
-  const loginEmail = login.value;
-  const loginPassword = password.value;
+  const userEmail = signupEmailEl.value;
+  const userPassword = signupPasswordEl.value;
+  const userName = signupNameEl.value;
+  await updateUserName(userName);
 
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
-      loginEmail,
-      loginPassword
+      userEmail,
+      userPassword
     );
-    await writeUserDataFirst(userCredential.user.uid, login.value);
-    profileName.textContent = login.value;
+    await writeUserDataFirst(userCredential.user.uid, userEmail);
+    updateProfileEmail(userEmail);
     Notiflix.Notify.success('Account is created');
   } catch (error) {
-    if (error.message === 'Firebase: Error (auth/invalid-email).')
-      Notiflix.Notify.failure('Login is invalid');
-    else if (
-      error.message ===
-      'Firebase: Password should be at least 6 characters (auth/weak-password).'
-    )
-      Notiflix.Notify.failure('Password should be at least 6 characters');
-    else if (login.value !== '' && password.value === '')
-      Notiflix.Notify.failure('Password is invalid');
-    else if (login.value === '' && password.value === '')
-      Notiflix.Notify.failure('Password and login are invalid');
-    else if (error.message === 'Firebase: Error (auth/email-already-in-use).') {
-      Notiflix.Notify.failure('This email already exist');
-    } else {
-      Notiflix.Notify.failure(error.message);
-      console.log(error.message);
-    }
+    handleSignUpError(error);
   }
-  /* spinnerStart();                  /////////////////
-   setTimeout(() => {
-     document.location.reload();
-   }, 1000);*/
 }
 async function signInUser(event) {
-  const login = document.querySelector('.login .user_login');
-  const password = document.querySelector('.login .user_password');
-
   event.preventDefault();
-  const loginEmail = login.value;
-  const loginPassword = password.value;
+  const userEmail = signinEmailEl.value;
+  const userPassword = signinPasswordEl.value;
+  updateProfileName(getValueFromLocalStorage('userName') || 'TestUser');
 
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
-      loginEmail,
-      loginPassword
+      userEmail,
+      userPassword
     );
-    Notiflix.Notify.success('WElcome to your library!');
+    Notiflix.Notify.success('Welcome to your library!');
     try {
       onWatchedBtnClick(auth, readAllUserData);
     } catch {}
@@ -221,8 +198,7 @@ async function signInUser(event) {
 async function logOutUser() {
   await signOut(auth);
   currentUID = '';
-  login.value = '';
-  password.value = '';
+  resetFormFields();
   try {
     queueBtnEl2.style.background = 'transparent';
     queueBtnEl2.style.borderColor = '#ffffff';
@@ -241,3 +217,50 @@ async function logOutUser() {
   } catch {}
 }
 //________________________________________________
+
+function resetFormFields() {
+  signupEmailEl.value = '';
+  signupPasswordEl.value = '';
+  signinEmailEl.value = '';
+  signinPasswordEl.value = '';
+  signupNameEl.textContent = '';
+}
+
+async function updateUserName(userName) {
+  if (!(userName === getValueFromLocalStorage('userName'))) {
+    setValueInLocalStorage('userName', userName);
+    profileUserName.textContent = userName;
+  }
+}
+
+function updateProfileEmail(userEmail) {
+  profileUserEmail.textContent = userEmail;
+}
+
+function updateProfileName(userName) {
+  profileUserName.textContent = userName;
+}
+
+function handleSignUpError(error) {
+  switch (error.message) {
+    case 'Firebase: Error (auth/invalid-email).':
+      Notiflix.Notify.failure('Login is invalid');
+      break;
+    case 'Firebase: Password should be at least 6 characters (auth/weak-password).':
+      Notiflix.Notify.failure('Password should be at least 6 characters');
+      break;
+    case 'Firebase: Error (auth/email-already-in-use).':
+      Notiflix.Notify.failure('This email already exists');
+      break;
+    default:
+      if (signupEmailEl.value !== '' && signupPasswordEl.value === '')
+        Notiflix.Notify.failure('Password is invalid');
+      else if (signupEmailEl.value === '' && signupPasswordEl.value === '')
+        Notiflix.Notify.failure('Password and login are invalid');
+      else {
+        Notiflix.Notify.failure(error.message);
+        console.log(error.message);
+      }
+      break;
+  }
+}

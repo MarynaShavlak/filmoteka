@@ -438,15 +438,18 @@ top:-200px;
 
 
 .profile-window__greet {
-     margin-bottom: 10px;
+     margin-bottom: 20px;
      text-align: center;
+     font-size:16px;
 }
 
 .profile-window__text {
-     font-size: 14px;
+     font-size: 12px;
+     font-style: italic;
+     margin-bottom: 10px;
 }
 
-.profile__name, .profile-window__user  {
+.profile-window__email, .profile-window__user  {
     font-weight: 500;
     color:#b40320;
    

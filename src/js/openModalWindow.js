@@ -20,7 +20,7 @@ function openModal() {
     document.body.classList.toggle('modal-open');
     refs.modal.classList.toggle('is-hidden');
   } else {
-    console.log('треба показати випадаюче выкно');
+    console.log('треба показати випадаюче вікно');
     profile.classList.remove('isHidden');
   }
 }
