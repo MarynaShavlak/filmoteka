@@ -26,32 +26,32 @@ import {
   getValueFromLocalStorage,
   setValueInLocalStorage,
 } from './utils/localStorage.js';
-import { userIcon, lockIcon } from './utils/markup.js';
-
+import { refs } from './refs.js';
+import {
+  makeAuthFormInvisible,
+  makeAuthFormVisible,
+  updateProfileModal,
+  resetFormFields,
+  updateUserName,
+  updateProfileEmail,
+  updateProfileName,
+  hideProfileModal,
+} from './openModalWindow.js';
 export let currentUID = '';
 
-//btn header switch
-
-const userAvatar = document.querySelector('[data-switch]');
-const watchedBtnEl2 = document.querySelector('.js-library-btn--watched');
-const queueBtnEl2 = document.querySelector('.js-library-btn--queue');
-const movieListEl2 = document.querySelector('.movie-list');
-
-const backdrop = document.querySelector('.backdrop-modal-login');
-const btnLogOut = document.querySelector('.btn-log-out');
-const btnSign = document.querySelector('.btn-sign');
-const btnLogin = document.querySelector('.btn-login');
-const signupNameEl = document.querySelector('.signup .user_name');
-const signupEmailEl = document.querySelector('.signup .user_login');
-const signupPasswordEl = document.querySelector('.signup .user_password');
-const signinEmailEl = document.querySelector('.login .user_login');
-const signinPasswordEl = document.querySelector('.login .user_password');
-
-const form = document.querySelector('#auth-form');
-const headerContainer = document.querySelector('.header__link-container');
-const profile = document.querySelector('#profile');
-const profileUserEmail = document.querySelector('.profile-window__email');
-const profileUserName = document.querySelector('.profile-window__user');
+const {
+  watchedBtnEl2,
+  queueBtnEl2,
+  movieListEl2,
+  btnLogOut,
+  btnSign,
+  btnLogin,
+  signupNameEl,
+  signupEmailEl,
+  signupPasswordEl,
+  signinEmailEl,
+  signinPasswordEl,
+} = refs;
 
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyCCtjOeYUGfFakMk9BInb8D18c_-yBX2Oc',
@@ -68,26 +68,18 @@ const firebaseApp = initializeApp({
 export const auth = getAuth(firebaseApp);
 onAuthStateChanged(auth, async user => {
   if (user) {
-    btnLogOut.classList.remove('hide'); //
-    form.classList.add('hide'); //
-    headerContainer.classList.remove('isOverflowHidden');
-    profile.classList.remove('disabled'); //
-    backdrop.classList.add('is-hidden');
+    makeAuthFormInvisible();
+    updateProfileModal(true);
     currentUID = user.uid;
-    userAvatar.innerHTML = userIcon;
 
     try {
-      profileUserEmail.textContent = user.email;
+      updateProfileEmail(user.email);
     } catch {}
   } else {
     currentUID = '';
-    profileUserEmail.textContent = '';
-
-    btnLogOut.classList.add('hide'); //
-    form.classList.remove('hide'); //
-    headerContainer.classList.add('isOverflowHidden');
-    profile.classList.add('disabled'); //
-    userAvatar.innerHTML = lockIcon;
+    updateProfileEmail('');
+    updateProfileModal(false);
+    makeAuthFormVisible();
   }
 });
 btnSign.addEventListener('click', signUpUser);
@@ -121,13 +113,11 @@ export async function writeUserDataWatch(userId, data) {
   update(ref(db, 'users/' + userId), { userDataWatch: data });
 }
 
-async function writeUserDataFirst(userId, /*queue, watch, */ loginData) {
+async function writeUserDataFirst(userId, loginData) {
   try {
     const db = getDatabase();
     const reference = ref(db, 'users/' + userId);
     await set(reference, {
-      /* userDataQueue: queue,
-       userDataWatch: watch,*/
       userLogin: loginData,
     });
   } catch (e) {
@@ -143,14 +133,6 @@ export async function readAllUserData(userId) {
     return data;
   } catch (eror) {
     console.log(eror);
-  }
-}
-
-function showLoginEror(error) {
-  if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
-    Notiflix.Notify.failure('Password is invalid');
-  } else {
-    Notiflix.Notify.failure('Login is invalid');
   }
 }
 
@@ -192,7 +174,7 @@ async function signInUser(event) {
       onWatchedBtnClick(auth, readAllUserData);
     } catch {}
   } catch (error) {
-    showLoginEror(error);
+    handleSiginError(error);
   }
 }
 async function logOutUser() {
@@ -206,8 +188,9 @@ async function logOutUser() {
     watchedBtnEl2.style.background = 'transparent';
     watchedBtnEl2.style.borderColor = '#ffffff';
     movieListEl2.innerHTML = '';
+    hideProfileModal();
   } catch {
-    spinnerStart(); ///////////
+    spinnerStart();
     setTimeout(() => {
       spinnerStop();
     }, 1500);
@@ -216,30 +199,7 @@ async function logOutUser() {
     onWatchedBtnClick(auth, readAllUserData);
   } catch {}
 }
-//________________________________________________
-
-function resetFormFields() {
-  signupEmailEl.value = '';
-  signupPasswordEl.value = '';
-  signinEmailEl.value = '';
-  signinPasswordEl.value = '';
-  signupNameEl.textContent = '';
-}
-
-async function updateUserName(userName) {
-  if (!(userName === getValueFromLocalStorage('userName'))) {
-    setValueInLocalStorage('userName', userName);
-    profileUserName.textContent = userName;
-  }
-}
-
-function updateProfileEmail(userEmail) {
-  profileUserEmail.textContent = userEmail;
-}
-
-function updateProfileName(userName) {
-  profileUserName.textContent = userName;
-}
+//_________________error handlers_______________________________
 
 function handleSignUpError(error) {
   switch (error.message) {
@@ -262,5 +222,13 @@ function handleSignUpError(error) {
         console.log(error.message);
       }
       break;
+  }
+}
+
+function handleSiginError(error) {
+  if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
+    Notiflix.Notify.failure('Password is invalid');
+  } else {
+    Notiflix.Notify.failure('Login is invalid');
   }
 }

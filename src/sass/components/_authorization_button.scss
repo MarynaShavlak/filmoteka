@@ -24,9 +24,10 @@
     transform: scale(1.05);
   }
 
+
   &:focus {
-    background-color: $active-btn-color;
-    border-color: transparent;
+    // background-color: $active-btn-color;
+    border-color: $active-btn-color;
     transform: scale(1.05);
   }
 
