@@ -57,7 +57,7 @@ function showProfileModal() {
   profile.classList.remove('isHidden');
 }
 
-function hideProfileModal() {
+export function hideProfileModal() {
   headerContainer.classList.add('isOverflowHidden');
   profile.classList.add('isHidden');
 }
