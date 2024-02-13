@@ -1,7 +1,7 @@
 <header class="library-header">
   <div class="container">
     <include src="./partials/dark-toggle.html"></include>
-    <div class="library-header__link-container">
+    <div class="library-header__link-container isOverflowHidden">
       <nav class="library-nav">
         <a href="./index.html" class="library-nav__logo">
           <svg
@@ -31,6 +31,17 @@
         type="button"
         class="sign-in-btn"
       ></button>
+      <div class="profile-window isHidden" id="profile">
+        <p class="profile-window__greet">
+          Welcome, <span class="profile-window__user">UserName</span>
+        </p>
+        <p class="profile-window__text">Signed in with email:</p>
+        <p class="profile-window__email"></p>
+
+        <button class="btn-log-out form-login__submit" type="button">
+          Log out
+        </button>
+      </div>
     </div>
     <div class="library-btn__container">
       <button type="button" class="library-btn js-library-btn--watched">

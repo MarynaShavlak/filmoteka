@@ -13,10 +13,11 @@ export const refs = {
   watchedBtn: document.querySelector('.watchedJS'),
   queueBtn: document.querySelector('.queueJS'),
   paginationContainer: document.querySelector('.tui-pagination'),
-  // openModalBtn: document.querySelector('[data-modal-open]'),
   closeAuthModalBtn: document.querySelector('[data-modal-close]'),
-  // modal: document.querySelector('[data-modal]'),
-  headerContainer: document.querySelector('.header__link-container'),
+
+  headerContainer:
+    document.querySelector('.header__link-container') ||
+    document.querySelector('.library-header__link-container'),
   userAvatar: document.querySelector('[data-switch]'),
   watchedBtnEl2: document.querySelector('.js-library-btn--watched'),
   queueBtnEl2: document.querySelector('.js-library-btn--queue'),

@@ -14,6 +14,13 @@ const {
   headerContainer,
   form,
   btnLogOut,
+  signupNameEl,
+  signupEmailEl,
+  signupPasswordEl,
+  signinEmailEl,
+  signinPasswordEl,
+  profileUserEmail,
+  profileUserName,
 } = refs;
 
 userAvatar.addEventListener('click', openModal);
@@ -55,19 +62,24 @@ function hideProfileModal() {
 }
 
 export function makeAuthFormInvisible() {
-  form.classList.add('hide'); //
+  form.classList.add('hide');
   headerContainer.classList.remove('isOverflowHidden');
   profile.classList.add('isHidden');
-  profile.classList.remove('disabled'); //
+  profile.classList.remove('disabled');
   backdrop.classList.add('is-hidden');
+}
+export function makeAuthFormVisible() {
+  form.classList.remove('hide');
+  headerContainer.classList.add('isOverflowHidden');
+  profile.classList.add('disabled');
 }
 
 export function updateProfileModal(isEnable) {
   if (isEnable) {
-    btnLogOut.classList.remove('hide'); //
+    btnLogOut.classList.remove('hide');
     userAvatar.innerHTML = userIcon;
   } else {
-    btnLogOut.classList.add('hide'); //
+    btnLogOut.classList.add('hide');
     userAvatar.innerHTML = lockIcon;
   }
 }
