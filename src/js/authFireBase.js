@@ -1,20 +1,31 @@
-import { initializeApp } from "firebase/app"
+import { initializeApp } from 'firebase/app';
 import {
-  getAuth, signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, AuthErrorCodes, onAuthStateChanged, signOut
-} from 'firebase/auth'
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  AuthErrorCodes,
+  onAuthStateChanged,
+  signOut,
+} from 'firebase/auth';
 import 'notiflix/dist/notiflix-3.2.6.min.css';
 import Notiflix from 'notiflix';
 
-import { getDatabase, ref, set, child, get, push, update } from "firebase/database"
+import {
+  getDatabase,
+  ref,
+  set,
+  child,
+  get,
+  push,
+  update,
+} from 'firebase/database';
 
 import { spinnerStart, spinnerStop } from './loader';
-import { onWatchedBtnClick } from './my-library-watched-queue/queueWatchAuthFunc.js'
+import { onWatchedBtnClick } from './my-library-watched-queue/queueWatchAuthFunc.js';
 //data-template-local-storage.js////////////////////////////
 //import { userDataWatched, userDataQueue } from "./my-library-watched-queue/data-template-local-storage.js"
 
-
-export let currentUID = "";
+export let currentUID = '';
 
 //btn header switch
 
@@ -29,38 +40,37 @@ const svg1 = ` <svg width="30" height="30"  viewBox="0 0 32 32" xmlns="http://ww
                 d="M6.4 12.8V9.6C6.4 4.298 10.698 0 16 0s9.6 4.298 9.6 9.6v3.2h1.6a3.2 3.2 0 0 1 3.2 3.2v12.8a3.2 3.2 0 0 1-3.2 3.2H4.8a3.2 3.2 0 0 1-3.2-3.2V16c0-1.76 1.44-3.2 3.2-3.2h1.6zm8 10.768V27.2h3.2v-3.632a3.205 3.205 0 0 0 1.6-2.771 3.2 3.2 0 1 0-4.815 2.763l.015.008zM11.2 9.6v3.2h9.6V9.6a4.8 4.8 0 1 0-9.6 0z" />
 </svg>`;
 
-const useEl = document.querySelector("[data-switch]");
-
+const useEl = document.querySelector('[data-switch]');
 
 const watchedBtnEl2 = document.querySelector('.js-library-btn--watched');
 const queueBtnEl2 = document.querySelector('.js-library-btn--queue');
 
-
 //Element
-const btnLogOut = document.querySelector(".btn-log-out");
-const btnSign = document.querySelector(".btn-sign");
-const btnLogin = document.querySelector(".btn-login");
-const login = window.document.querySelector(".login");
-const password = window.document.querySelector(".password");
-const form = document.getElementById("form-login");
-const profile = document.getElementById("profile");
-const profileName = document.querySelector(".profile__name");
+const btnLogOut = document.querySelector('.btn-log-out');
+const btnSign = document.querySelector('.btn-sign');
+const btnLogin = document.querySelector('.btn-login');
+const login = document.querySelector('.user_login');
+const password = document.querySelector('.user_password');
+const form = document.querySelector('#auth-form');
+const profile = document.querySelector('#profile');
+const profileName = document.querySelector('.profile__name');
 const firebaseApp = initializeApp({
-  apiKey: "AIzaSyCCtjOeYUGfFakMk9BInb8D18c_-yBX2Oc",
-  authDomain: "filmoteka-e135b.firebaseapp.com",
-  databaseURL: "https://filmoteka-e135b-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "filmoteka-e135b",
-  storageBucket: "filmoteka-e135b.appspot.com",
-  messagingSenderId: "1055697661638",
-  appId: "1:1055697661638:web:27ed1ccf73ceb81da0b1c7",
-  measurementId: "G-8186NK0FHL"
+  apiKey: 'AIzaSyCCtjOeYUGfFakMk9BInb8D18c_-yBX2Oc',
+  authDomain: 'filmoteka-e135b.firebaseapp.com',
+  databaseURL:
+    'https://filmoteka-e135b-default-rtdb.europe-west1.firebasedatabase.app',
+  projectId: 'filmoteka-e135b',
+  storageBucket: 'filmoteka-e135b.appspot.com',
+  messagingSenderId: '1055697661638',
+  appId: '1:1055697661638:web:27ed1ccf73ceb81da0b1c7',
+  measurementId: 'G-8186NK0FHL',
 });
 
 export const auth = getAuth(firebaseApp);
 
 export async function writeUserDataQueue(userId, data) {
-  if (userId === "") {
-    console.log("userId is missing");
+  if (userId === '') {
+    console.log('userId is missing');
     return;
   }
   const db = getDatabase();
@@ -68,38 +78,35 @@ export async function writeUserDataQueue(userId, data) {
 }
 
 export async function currentFilmList(userId, data) {
-  if (userId === "") {
-    console.log("userId is missing");
+  if (userId === '') {
+    console.log('userId is missing');
     return;
   }
   const db = getDatabase();
   update(ref(db, 'users/' + userId), { currentFilmList: data });
 }
 
-
 export async function writeUserDataWatch(userId, data) {
-  if (userId === "") {
-    console.log("userId is missing");
+  if (userId === '') {
+    console.log('userId is missing');
     return;
   }
   const db = getDatabase();
   update(ref(db, 'users/' + userId), { userDataWatch: data });
 }
 
-async function writeUserDataFirst(userId, /*queue, watch, */loginData) {
+async function writeUserDataFirst(userId, /*queue, watch, */ loginData) {
   try {
     const db = getDatabase();
     const reference = ref(db, 'users/' + userId);
     await set(reference, {
       /* userDataQueue: queue,
        userDataWatch: watch,*/
-      userLogin: loginData
-    })
-  }
-  catch (e) {
+      userLogin: loginData,
+    });
+  } catch (e) {
     console.log(e);
   }
-
 }
 
 export async function readAllUserData(userId) {
@@ -108,33 +115,28 @@ export async function readAllUserData(userId) {
     const snapshot = await get(child(dbRef, `users/${userId}`));
     const data = await snapshot.val();
     return data;
-  }
-  catch (eror) {
+  } catch (eror) {
     console.log(eror);
   }
-
-
 }
-const loginEmailPassword = async (event) => {
-
+const loginEmailPassword = async event => {
   event.preventDefault();
   const loginEmail = login.value;
   const loginPassword = password.value;
 
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-    Notiflix.Notify.success("Enter");
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      loginEmail,
+      loginPassword
+    );
+    Notiflix.Notify.success('Enter');
     try {
       onWatchedBtnClick(auth, readAllUserData);
-    }
-    catch {
-
-    }
-  }
-  catch (error) {
+    } catch {}
+  } catch (error) {
     showLoginEror(error);
   }
-
 
   /* spinnerStart();                 /////////////
    setTimeout(() => {
@@ -143,121 +145,104 @@ const loginEmailPassword = async (event) => {
 };
 function showLoginEror(error) {
   if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
-    Notiflix.Notify.failure("Password is a invalid");
-  }
-  else {
-    Notiflix.Notify.failure("Login is invalid");
+    Notiflix.Notify.failure('Password is a invalid');
+  } else {
+    Notiflix.Notify.failure('Login is invalid');
   }
 }
-const createAccount = async (event) => {
+const createAccount = async event => {
   event.preventDefault();
   const loginEmail = login.value;
   const loginPassword = password.value;
 
   try {
-    const userCredential = await createUserWithEmailAndPassword(auth, loginEmail, loginPassword);
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      loginEmail,
+      loginPassword
+    );
     await writeUserDataFirst(userCredential.user.uid, login.value);
     profileName.textContent = login.value;
-    Notiflix.Notify.success("Account is created");
-  }
-  catch (error) {
-    if (error.message === "Firebase: Error (auth/invalid-email).") Notiflix.Notify.failure("Login is invalid");
-    else if (error.message === "Firebase: Password should be at least 6 characters (auth/weak-password).") Notiflix.Notify.failure("Password should be at least 6 characters");
-    else if (login.value !== "" && password.value === "") Notiflix.Notify.failure("Password is invalid");
-    else if (login.value === "" && password.value === "") Notiflix.Notify.failure("Password and login are invalid");
-    else if (error.message === "Firebase: Error (auth/email-already-in-use).") {
-      Notiflix.Notify.failure("This email already exist");
-    }
-    else {
+    Notiflix.Notify.success('Account is created');
+  } catch (error) {
+    if (error.message === 'Firebase: Error (auth/invalid-email).')
+      Notiflix.Notify.failure('Login is invalid');
+    else if (
+      error.message ===
+      'Firebase: Password should be at least 6 characters (auth/weak-password).'
+    )
+      Notiflix.Notify.failure('Password should be at least 6 characters');
+    else if (login.value !== '' && password.value === '')
+      Notiflix.Notify.failure('Password is invalid');
+    else if (login.value === '' && password.value === '')
+      Notiflix.Notify.failure('Password and login are invalid');
+    else if (error.message === 'Firebase: Error (auth/email-already-in-use).') {
+      Notiflix.Notify.failure('This email already exist');
+    } else {
       Notiflix.Notify.failure(error.message);
-      console.log(error.message)
+      console.log(error.message);
     }
-
   }
   /* spinnerStart();                  /////////////////
    setTimeout(() => {
      document.location.reload();
    }, 1000);*/
-}
-btnSign.addEventListener("click", createAccount);
-btnLogin.addEventListener("click", loginEmailPassword);
+};
+btnSign.addEventListener('click', createAccount);
+btnLogin.addEventListener('click', loginEmailPassword);
 
 const movieListEl2 = document.querySelector('.movie-list');
 
 onAuthStateChanged(auth, async user => {
   if (user) {
-
-
-    btnLogOut.classList.remove("hide");//
-    form.classList.add("hide");//
-    profile.classList.remove("hide");//
+    btnLogOut.classList.remove('hide'); //
+    form.classList.add('hide'); //
+    profile.classList.remove('hide'); //
     currentUID = user.uid;
     useEl.innerHTML = svg2;
     try {
       const rez = await readAllUserData(currentUID);
       profileName.textContent = rez.userLogin;
-    }
-    catch {
+    } catch {}
+  } else {
+    currentUID = '';
+    profileName.textContent = '';
 
-    }
-
-
-  }
-  else {
-
-    currentUID = "";
-    profileName.textContent = "";
-
-    btnLogOut.classList.add("hide");//
-    form.classList.remove("hide");//
-    profile.classList.add("hide");//
+    btnLogOut.classList.add('hide'); //
+    form.classList.remove('hide'); //
+    profile.classList.add('hide'); //
     useEl.innerHTML = svg1;
-
-
   }
-})
+});
 const logout = async () => {
   await signOut(auth);
-  currentUID = "";
-  login.value = "";
-  password.value = "";
+  currentUID = '';
+  login.value = '';
+  password.value = '';
   try {
     queueBtnEl2.style.background = 'transparent';
     queueBtnEl2.style.borderColor = '#ffffff';
 
     watchedBtnEl2.style.background = 'transparent';
     watchedBtnEl2.style.borderColor = '#ffffff';
-    movieListEl2.innerHTML = "";
-  }
-  catch {
-
-    spinnerStart();                           ///////////
+    movieListEl2.innerHTML = '';
+  } catch {
+    spinnerStart(); ///////////
     setTimeout(() => {
       spinnerStop();
-
     }, 1500);
   }
   try {
     onWatchedBtnClick(auth, readAllUserData);
-  }
-  catch {
-
-  }
-
-
-
-
-}
-btnLogOut.addEventListener("click", logout);
+  } catch {}
+};
+btnLogOut.addEventListener('click', logout);
 
 /*document.querySelector(".test").addEventListener("click", async () => {
     console.log(await readAllUserData(currentUID));
     await writeUserDataQueue(currentUID, ["dd", 'qq'])
     console.log(await readAllUserData(currentUID));
 });*/
-
-
-
 
 /*writeUserDataWatch("LThvuvbfVcfI6QePsML4UusFPrr2", [
 
