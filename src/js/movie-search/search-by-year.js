@@ -9,8 +9,6 @@ import {
 
 import { userSearchObj } from './search-by-keyword';
 
-// import { userQueryForPagination } from './search-by-keyword';
-// import { userGenreForPagination } from './search-by-genre';
 //find movies by year
 searchRefs.galleryEl.addEventListener('click', findMoviesByYear);
 // export let userYearForPagination = '';

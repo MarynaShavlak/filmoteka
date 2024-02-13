@@ -40,7 +40,6 @@ export default class TmdbAPI {
 
   constructor(page = 1) {
     this.page = page;
-    // this.#createGenresObj();
   }
 
   fetchGenres() {
@@ -181,7 +180,9 @@ export default class TmdbAPI {
     const genreIndex = genre_ids.indexOf(genreID);
 
     genre_ids.splice(genreIndex, 1);
-
+    if (genre_ids.length > 2) {
+      return `${TmdbAPI.genres[genre_ids[0]]}, `;
+    }
     switch (genre_ids.length) {
       case 1:
         return `${genre}`;
@@ -192,9 +193,6 @@ export default class TmdbAPI {
       default:
         return `${genre}, ${TmdbAPI.genres[genre_ids[0]]}, Other`;
         break;
-    }
-    if (genre_ids.length > 2) {
-      return `${TmdbAPI.genres[genre_ids[0]]}, `;
     }
   }
 }

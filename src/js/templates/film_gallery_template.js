@@ -26,14 +26,7 @@ function addAdaptiveImgHTMLString(result) {
   // // ----------
   let poster = result.poster_path;
   poster = result.poster_path;
-  // let testImg = `${TmdbAPI.IMG_BASE_URL}/original${result.poster_path}`;
-  // if ((poster || testImage(testImg)) && poster !== null) {
-  //   poster = result.poster_path;
-  // } else {
-  //   return `<picture>
-  // 	<img src="${emptyphoto}" alt="The poster of ${result.title} film" class="trending-gallery__image" loading="lazy" data-id="${result.id}"/>
-  // </picture>`;
-  // }
+
   if (poster && poster !== '') {
     poster = result.poster_path;
   } else {
@@ -110,12 +103,3 @@ export function makeHMTLStringWithGenre({ results }, genre) {
     })
     .join('');
 }
-
-// -----------test
-// function testImage(poster) {
-//   let tester = new Image();
-//   tester.addEventListener('load', () => console.log('loaded'));
-//   tester.addEventListener('error', () => false);
-//   tester.src = poster;
-// }
-// -----------test

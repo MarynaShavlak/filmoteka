@@ -33,7 +33,6 @@ searchRefs.advancedSearchEl.addEventListener(
 );
 
 function showAdvancedSearch(event) {
-  // console.dir(event.target);/
   if (!event.target.classList.value.includes('show-advanced-search-js')) return;
   setTimeout(() => toggleAdvancedSearch(), 100);
   if (areOptionsGenerated) return;
@@ -56,14 +55,12 @@ function toggleAdvancedSearch() {
 }
 
 function generateSelectOptions(form) {
-  // console.log(Object.values(TmdbAPI.genres));
   const genreOptionsHtmlStr = Object.values(TmdbAPI.genres)
     .map(
       genre =>
         `<option value="${genre}" class="advanced-search__option">${genre}</option>`
     )
     .join('');
-  //forming select genre select HTML
   const selectGenreHtmlStr = `
 		<select name="genre" id="" class="advanced-search__genre advanced-search__select">
 			<option value="" class="advanced-search__option--main">Choose genre to find</option>
@@ -143,9 +140,6 @@ function clearAdvancedSearchForm() {
 }
 
 function changeAdvSearchWindow(obj) {
-  // console.log('optionObj', optionsObj);
-  // console.log('chosen params', chosenAdvSearchParamsString(optionsObj));
-  // console.log('optionObj', optionsObj);
   searchRefs.advancedSearchChosenWindowEl.classList.remove('visually-hidden');
   searchRefs.advancedSearchChosenEl.innerHTML = `${chosenAdvSearchParamsString(
     obj
@@ -169,10 +163,6 @@ function onAdvancedSearchElSubmit(event) {
       ],
   };
 
-  // const isTheSameSettings = Object.keys(optionsObj).reduce((acc, rec) => {
-  //   return acc && optionsObj[rec] === userAdvancedSearchForPagination[rec];
-  // }, true);
-
   //check if nothing chosen
   if (!isOptionsObjHasValues(optionsObj)) {
     Notify.failure('Choose some parameters!');
@@ -195,22 +185,7 @@ function onAdvancedSearchElSubmit(event) {
   optionsObj.primary_release_year = searchYear;
 
   let isTheSameSettings = true;
-  // console.log('optionsObj', optionsObj);
-  // console.log(
-  //   'userAdvancedSearchForPagination',
-  //   userAdvancedSearchForPagination
-  // );
-  // // console.log(
-  // //   'isEqual',
-  // //   optionsObj[primary_release_year] ===
-  // //     userAdvancedSearchForPagination[primary_release_year]
-  // // );
   Object.keys(optionsObj).forEach(key => {
-    // console.log(
-    //   'options',
-    //   optionsObj[key],
-    //   userAdvancedSearchForPagination[key]
-    // );
     if (optionsObj[key] !== userAdvancedSearchForPagination[key])
       isTheSameSettings = false;
   });

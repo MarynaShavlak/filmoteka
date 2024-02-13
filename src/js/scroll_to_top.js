@@ -1,4 +1,5 @@
-const mybutton = document.getElementById('btnScrollToTop');
+import { refs } from './refs';
+const { toTopBtn } = refs;
 
 window.onscroll = function () {
   scrollFunction();
@@ -6,10 +7,10 @@ window.onscroll = function () {
 
 export function scrollFunction() {
   if (document.body.scrollB > 50 || document.documentElement.scrollTop > 50) {
-    mybutton.style.display = 'block';
-    mybutton.addEventListener('click', topFunction);
+    toTopBtn.style.display = 'block';
+    toTopBtn.addEventListener('click', topFunction);
   } else {
-    mybutton.style.display = 'none';
+    toTopBtn.style.display = 'none';
   }
 }
 

@@ -1,7 +1,7 @@
 import emptyPhoto from '../images/empty-photo/empty-poster.jpg';
 import { fetchMovie } from './fetch_movie_details';
-import getGenres from './trending-search-main/fetch-genres';
-import { auth } from './authFireBase.js'
+import { auth } from './authFireBase.js';
+import { calcImageSize } from './utils/calcWidthAndHeightImg.js';
 export async function renderModal(list, id, watched, queue) {
   const movieDetails = await fetchMovie(id);
 
@@ -18,13 +18,10 @@ export async function renderModal(list, id, watched, queue) {
     homepage: homepageLink,
   } = movieDetails;
 
-  // console.log('homepageLink', homepageLink);
-
   const finalGenres = genres.map(genre => {
     return genre.name;
   });
 
-  // для отримання даних про фільм додаю іх в data-атрибути
   const modalEl = document.querySelector('.movie-modal__main');
   modalEl.setAttribute('data-poster', poster_path);
   modalEl.setAttribute('data-title', title);
@@ -32,24 +29,16 @@ export async function renderModal(list, id, watched, queue) {
   modalEl.setAttribute('data-date', movieDetails.release_date);
   modalEl.setAttribute('data-votes', vote_average);
   modalEl.setAttribute('data-id', id);
-  ///////////////////////////////////////////////////////////
-  // також скоригувала наступні два рядки коду: отримання інфи, чи є даний фільм в бібліотеці,
-  // для того, щоб відобразити правильний текст на кнопці
   let isInQueue;
   let isInWatched;
   if (auth.currentUser === null) {
     isInQueue = false;
     isInWatched = false;
-  }
-  else {
+  } else {
     isInQueue = queue.some(film => film.id === id);
     isInWatched = watched.some(film => film.id === id);
   }
-
-
-  //////////////////////////////////////////////////////////////
-  // const isInQueue = foundInQueue;
-  // const isInWatched = foundInWatched;
+  const size = calcImageSize();
   const queueBtnMarkup = isInQueue
     ? `<button class="modal__btn-queue interactive-button" data-id=${id}>remove from queue</button>`
     : `<button class="modal__btn-queue interactive-button" data-id=${id}>add to queue</button>`;
@@ -66,8 +55,8 @@ export async function renderModal(list, id, watched, queue) {
           <div class="movie-modal__item-first">Vote/Votes</div>
           <div class="movie-modal__item-votes">
             <span class="movie-modal__item-bg movie-modal__item--accent">${vote_average.toFixed(
-        1
-      )}</span> /
+              1
+            )}</span> /
             <span class="movie-modal__item-bg movie-modal__item--grey">${vote_count}</span>
           </div>
         </li>`
@@ -105,14 +94,12 @@ export async function renderModal(list, id, watched, queue) {
     : '';
   const photoMarkup = poster_path
     ? `<div class="movie-modal__img">
-      <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}" class="movie-modal__img-poster"/>${homepageBtn}
+      <img src="https://image.tmdb.org/t/p/w500${poster_path}" alt="${title}" class="movie-modal__img-poster" width="${size.width}" height="${size.height}"/>${homepageBtn}
     </div>`
     : `<div class="movie-modal__img">
-      <img src="${emptyPhoto}" alt="photo coming soon" />${homepageBtn}
+      <img src="${emptyPhoto}" alt="photo coming soon" width="${size.width}" height="${size.height}"/>${homepageBtn}
     </div>`;
 
-  // console.log('homepageBtn', homepageBtn);
-  //фукнція повертає рядок розмітки, а не масив (ті дані нерелевантні, і я їх прибрала)
   return `${photoMarkup}
     <div class="movie-modal__about">
       <h2 class="movie-modal__headline">${title}</h2>

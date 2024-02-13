@@ -35,4 +35,9 @@ export const refs = {
   profile: document.querySelector('#profile'),
   profileUserEmail: document.querySelector('.profile-window__email'),
   profileUserName: document.querySelector('.profile-window__user'),
+  darkToggleEl: document.querySelector('#dark-toggle'),
+  darkToggleWindowEl: document.querySelector('.dark-toggle-window'),
+  darkTogleLableEl: document.querySelector('.dark-toggle-label'),
+  backdropLoader: document.querySelector('.backdrop-loader'),
+  toTopBtn: document.querySelector('#btnScrollToTop'),
 };

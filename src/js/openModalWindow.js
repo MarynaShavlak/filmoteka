@@ -26,6 +26,7 @@ const {
 userAvatar.addEventListener('click', openModal);
 closeAuthModalBtn.addEventListener('click', toggleAuthModal);
 backdrop.addEventListener('click', closeAuthModal);
+window.addEventListener('click', handleCloseProfileModal);
 
 function toggleAuthModal() {
   body.classList.toggle('modal-open');
@@ -59,6 +60,19 @@ function showProfileModal() {
 function hideProfileModal() {
   headerContainer.classList.add('isOverflowHidden');
   profile.classList.add('isHidden');
+}
+
+function handleCloseProfileModal(e) {
+  const clickedEl = e.target;
+  const isButton =
+    clickedEl.classList.contains('sign-in-btn') ||
+    clickedEl.closest('button.sign-in-btn');
+  if (!isButton) {
+    const parent = clickedEl.closest('.profile-window');
+    if (!parent) {
+      hideProfileModal();
+    }
+  }
 }
 
 export function makeAuthFormInvisible() {

@@ -1,23 +1,17 @@
 import fetchPopularFilms from './fetch-movies';
 import getImages from './fetch-images-url';
-// import getGenres from './fetch-genres';
 
 import ultimatePagination from 'ultimate-pagination';
 import { userSearchObj } from '../movie-search/search-by-keyword';
-// import { userQueryForPagination } from '../movie-search/search-by-keyword';
-// import { userYearForPagination } from '../movie-search/search-by-year.js';
-// import { userGenreForPagination } from '../movie-search/search-by-genre.js';
 import {
   userAdvancedSearchForPagination,
   makeAdvancedSearch,
 } from '../movie-search/advanced-search.js';
-// import { makeAdvancedSearch } from '../movie-search/advanced-search.js';
 import { spinnerStart, spinnerStop } from '../loader';
 import { refs } from '../refs';
 import { searchRefs, tmdbAPI, scrollToTop } from '../movie-search/search-refs';
 import makeHMTLString from '../templates/film_gallery_template';
 import { TmdbAPI } from '../movie-search/search-refs';
-// console.log('genre names my', TmdbAPI.genres);
 
 export const tooglePagination = {
   isTrendingFilmsShown: true,
@@ -45,7 +39,6 @@ const cardList = document.querySelector('.trending-gallery');
 async function createMarkup(data) {
   try {
     const imageBaseURL = await getImages();
-    // const genreNames = await getGenres();
     const genreNames = TmdbAPI.genres;
 
     const markup = data
@@ -67,20 +60,22 @@ async function createMarkup(data) {
                     <div>
                         <img src="${imageBaseURL}${item.poster_path}"
                             class="trending-gallery__image" data-id="${item.id}"
-                            alt="The poster of ${item.title
-          } film " onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1616530940355-351fabd9524b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1935&q=80';"
+                            alt="The poster of ${
+                              item.title
+                            } film " onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1616530940355-351fabd9524b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1935&q=80';"
                             />
 
                     </div>            
                     <div class="trending-gallery__wrapper">
-                        <h3 class="trending-gallery__title" ><span class="title-modal-open" data-id="${item.id
-          }">${item.title}</span>
+                        <h3 class="trending-gallery__title" ><span class="title-modal-open" data-id="${
+                          item.id
+                        }">${item.title}</span>
                         </h3>
                               <p class="trending-gallery__info">${genres}
                               <span class="find-by-year-js">${item.release_date.slice(
-            0,
-            4
-          )}</span>
+                                0,
+                                4
+                              )}</span>
                               </p>
                     </div>
                   

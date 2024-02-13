@@ -12,8 +12,6 @@ import {
   deletePaginationInterface,
   tooglePagination,
 } from '../trending-search-main/trending-search.js';
-// import { userQueryForPagination } from './search-by-keyword';
-// import { userYearForPagination } from './search-by-year';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 import { userSearchObj } from './search-by-keyword';
 

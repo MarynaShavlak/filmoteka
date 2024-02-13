@@ -1,8 +1,5 @@
-import Notiflix from 'notiflix';
 import { renderMoviesLibrary } from './renderMoviesLibrary';
-//import { userDataQueue, userDataWatched } from './data-template-local-storage';
 import { spinnerStart, spinnerStop } from '../loader';
-import fetchPopularFilms from '../trending-search-main/fetch-movies';
 
 const watchedBtnEl2 = document.querySelector('.js-library-btn--watched');
 const queueBtnEl2 = document.querySelector('.js-library-btn--queue');

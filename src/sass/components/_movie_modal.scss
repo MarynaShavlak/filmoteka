@@ -1,31 +1,28 @@
 .movie-modal {
   position: fixed;
   top: 20px;
-
   padding: 48px 20px 40px 20px;
   width: 285px;
   max-height: calc(100% - 40px);
-
   font-weight: 500;
-
   background-color: $primary-white-color;
-
   overflow-y: auto;
   z-index: 10;
-
   transition: opacity 500ms;
+  min-height:700px;
 
   @include tablet {
     top: 50%;
     transform: translateY(-50%);
-
     width: 704px;
     padding: 40px 36px;
+    min-height: 476px;
   }
 
   @include desktop {
     width: 806px;
     padding: 40px 12px;
+    min-height: 643px;
   }
 
   &__main {
@@ -56,11 +53,9 @@
 
     @include tablet {
       width: 264px;
-      // height: 374px;
     }
     @include desktop {
       width: 375px;
-      // height: 478px;
     }
   }
 
