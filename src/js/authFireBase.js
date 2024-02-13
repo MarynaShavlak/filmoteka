@@ -41,19 +41,21 @@ const svg1 = ` <svg width="30" height="30"  viewBox="0 0 32 32" xmlns="http://ww
 </svg>`;
 
 const useEl = document.querySelector('[data-switch]');
-
 const watchedBtnEl2 = document.querySelector('.js-library-btn--watched');
 const queueBtnEl2 = document.querySelector('.js-library-btn--queue');
+const movieListEl2 = document.querySelector('.movie-list');
 
-//Element
+const backdrop = document.querySelector('.backdrop-modal-login');
 const btnLogOut = document.querySelector('.btn-log-out');
 const btnSign = document.querySelector('.btn-sign');
 const btnLogin = document.querySelector('.btn-login');
 const login = document.querySelector('.user_login');
 const password = document.querySelector('.user_password');
 const form = document.querySelector('#auth-form');
+const headerContainer = document.querySelector('.header__link-container');
 const profile = document.querySelector('#profile');
 const profileName = document.querySelector('.profile__name');
+
 const firebaseApp = initializeApp({
   apiKey: 'AIzaSyCCtjOeYUGfFakMk9BInb8D18c_-yBX2Oc',
   authDomain: 'filmoteka-e135b.firebaseapp.com',
@@ -67,6 +69,33 @@ const firebaseApp = initializeApp({
 });
 
 export const auth = getAuth(firebaseApp);
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    btnLogOut.classList.remove('hide'); //
+    form.classList.add('hide'); //
+    headerContainer.classList.remove('isOverflowHidden');
+    profile.classList.remove('disabled'); //
+    backdrop.classList.add('is-hidden');
+    currentUID = user.uid;
+    useEl.innerHTML = svg2;
+    try {
+      const rez = await readAllUserData(currentUID);
+      profileName.textContent = rez.userLogin;
+    } catch {}
+  } else {
+    currentUID = '';
+    profileName.textContent = '';
+
+    btnLogOut.classList.add('hide'); //
+    form.classList.remove('hide'); //
+    headerContainer.classList.add('isOverflowHidden');
+    profile.classList.add('disabled'); //
+    useEl.innerHTML = svg1;
+  }
+});
+btnSign.addEventListener('click', signUpUser);
+btnLogin.addEventListener('click', signInUser);
+btnLogOut.addEventListener('click', logOutUser);
 
 export async function writeUserDataQueue(userId, data) {
   if (userId === '') {
@@ -119,38 +148,17 @@ export async function readAllUserData(userId) {
     console.log(eror);
   }
 }
-const loginEmailPassword = async event => {
-  event.preventDefault();
-  const loginEmail = login.value;
-  const loginPassword = password.value;
 
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      loginEmail,
-      loginPassword
-    );
-    Notiflix.Notify.success('Enter');
-    try {
-      onWatchedBtnClick(auth, readAllUserData);
-    } catch {}
-  } catch (error) {
-    showLoginEror(error);
-  }
-
-  /* spinnerStart();                 /////////////
-   setTimeout(() => {
-     document.location.reload();
-   }, 1000);*/
-};
 function showLoginEror(error) {
   if (error.code === AuthErrorCodes.INVALID_PASSWORD) {
-    Notiflix.Notify.failure('Password is a invalid');
+    Notiflix.Notify.failure('Password is invalid');
   } else {
     Notiflix.Notify.failure('Login is invalid');
   }
 }
-const createAccount = async event => {
+
+// _______  Registaration functions_____________________//
+async function signUpUser(event) {
   event.preventDefault();
   const loginEmail = login.value;
   const loginPassword = password.value;
@@ -187,34 +195,30 @@ const createAccount = async event => {
    setTimeout(() => {
      document.location.reload();
    }, 1000);*/
-};
-btnSign.addEventListener('click', createAccount);
-btnLogin.addEventListener('click', loginEmailPassword);
+}
+async function signInUser(event) {
+  const login = document.querySelector('.login .user_login');
+  const password = document.querySelector('.login .user_password');
 
-const movieListEl2 = document.querySelector('.movie-list');
+  event.preventDefault();
+  const loginEmail = login.value;
+  const loginPassword = password.value;
 
-onAuthStateChanged(auth, async user => {
-  if (user) {
-    btnLogOut.classList.remove('hide'); //
-    form.classList.add('hide'); //
-    profile.classList.remove('hide'); //
-    currentUID = user.uid;
-    useEl.innerHTML = svg2;
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      loginEmail,
+      loginPassword
+    );
+    Notiflix.Notify.success('WElcome to your library!');
     try {
-      const rez = await readAllUserData(currentUID);
-      profileName.textContent = rez.userLogin;
+      onWatchedBtnClick(auth, readAllUserData);
     } catch {}
-  } else {
-    currentUID = '';
-    profileName.textContent = '';
-
-    btnLogOut.classList.add('hide'); //
-    form.classList.remove('hide'); //
-    profile.classList.add('hide'); //
-    useEl.innerHTML = svg1;
+  } catch (error) {
+    showLoginEror(error);
   }
-});
-const logout = async () => {
+}
+async function logOutUser() {
   await signOut(auth);
   currentUID = '';
   login.value = '';
@@ -235,29 +239,5 @@ const logout = async () => {
   try {
     onWatchedBtnClick(auth, readAllUserData);
   } catch {}
-};
-btnLogOut.addEventListener('click', logout);
-
-/*document.querySelector(".test").addEventListener("click", async () => {
-    console.log(await readAllUserData(currentUID));
-    await writeUserDataQueue(currentUID, ["dd", 'qq'])
-    console.log(await readAllUserData(currentUID));
-});*/
-
-/*writeUserDataWatch("LThvuvbfVcfI6QePsML4UusFPrr2", [
-
-
-    {
-        poster_path: '/sv1xJUazXeYqALzczSZ3O6nkH75.jpg',
-        title: 'Wakanda Foreva',
-        genres: ['Action', 'Adventure', 'Science Fiction'],
-        release_date: '2022-11-09',
-        vote_average: 7.491,
-        movie_id: 10992,
-    },
-]);*/
-/*async function readPromise(obj) {
-    const rez = await obj;
-    console.log(rez.userDataWatch);
 }
-readPromise(readAllUserData("LThvuvbfVcfI6QePsML4UusFPrr2"));*/
+//________________________________________________
