@@ -157,26 +157,6 @@ body.darkmode--activated,
   background-image: url(../images/icons/ellipsis-white.svg);
 }
 
-// .darkmode--activated .pagination__btn:not(.pagination__btn--active) {
-//   &:hover,
-//   &:focus,
-//   &:active {
-//     border: 1px solid $main-accent-color;
-//     color: $main-accent-color;
-//   }
-// }
-
-// .darkmode--activated .pagination__btn--active {
-//   background-color: $main-accent-color;
-//   border: 1px solid transparent;
-// }
-
-// .darkmode--activated .pagination__btn:not(.pagination__btn--active) {
-//   background-color: $primary-black-color;
-//   color: $primary-white-color;
-//   border: 1px solid transparent;
-//   transition: border-color $cubic, color $cubic;
-// }
 
 #day-night-icon {
   fill: $primary-white-color;
@@ -263,27 +243,28 @@ main,
   background-color: rgb(180, 180, 180);
 }
 
-.darkmode--activated .team-list__item {
-background-color: #c0c0c0;
-border: 1px solid black;
-}
-.darkmode--activated .team-list__text {
-  color: $primary-black-color;
-}
 
 
-.darkmode--activated .login-windowfgir  {
+
+.darkmode--activated .profile-window {
   background-color: #c0c0c0;
 }
 
-.darkmode--activated .register-input {
-  background-color: transparent;
-  border: 1px solid black;
+.darkmode--activated .login {
+  background-color: #c0c0c0;
+  
 }
 
 .darkmode--activated .btn-login,
-.darkmode--activated .btn-sign {
+.darkmode--activated .btn-sign,
+.darkmode--activated .btn-log-out {
   background-color: $additional-text-color-1;
   color: white;
   
 }
+.darkmode--activated .profile-window::before {
+    border-color: transparent transparent #c0c0c0 transparent;
+
+  
+}
+

@@ -1,6 +1,6 @@
 import './js/authFireBase.js';
 import './js/dark-mode';
-import './js/footer-modal';
+// import './js/footer-modal';
 import './js/trending-search-main/trending-search.js';
 import './js/movie_modal';
 import './js/openModalWindow.js';
