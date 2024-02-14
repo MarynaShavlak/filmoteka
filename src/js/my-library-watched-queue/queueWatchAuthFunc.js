@@ -32,7 +32,6 @@ export async function onWatchedBtnClick(auth, readAllUserData) {
 
     return;
   }
-  // console.log(movieWatched);
   if (Object.keys(movieWatched).length === 1) {
     movieListEl2.innerHTML =
       "<p>It seems you haven't watched any movie. You should try, it's fun🎭</p>";

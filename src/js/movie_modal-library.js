@@ -17,7 +17,6 @@ let queue;
 let watched;
 async function updateVar() {
   if (auth.currentUser === null) {
-    console.log(auth);
     queue = [];
     watched = [];
   } else {
@@ -44,7 +43,6 @@ async function updateMoviesList() {
       const allMoviesListFromStorage = await currentFilmList(
         auth.currentUser.uid
       );
-      console.log(allMoviesListFromStorage);
       const allMoviesList = allMoviesListFromStorage.currentFilmList || [];
       return allMoviesList;
     } catch {

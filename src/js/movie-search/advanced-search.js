@@ -121,7 +121,6 @@ export function makeAdvancedSearch(optionsObj) {
     .fetchAdvancedMovieSearch(optionsObj)
     .then(response => {
       const { data } = response;
-      console.log('data: ', data);
 
       scrollToTop();
       searchRefs.galleryEl.innerHTML = makeHMTLString(response.data);
@@ -158,7 +157,6 @@ function hideAdvSearchWindow() {
 
 //callback function for event listener on button submit - when the advanced search form is submitted and on reset
 function onAdvancedSearchElSubmit(event) {
-  console.log('submit advanced seacrh');
   event.preventDefault();
 
   //forming advanced search object
@@ -174,7 +172,6 @@ function onAdvancedSearchElSubmit(event) {
       ],
   };
 
-  console.log('optionsObj: ', optionsObj);
   //check if nothing chosen
   if (!isOptionsObjHasValues(optionsObj)) {
     Notify.failure('Choose some parameters!');
@@ -186,7 +183,6 @@ function onAdvancedSearchElSubmit(event) {
   tooglePagination.isFilmsByYearShown = true;
   //checking search year input
   let searchYear = searchRefs.advancedSearchEl.year.value;
-  console.log('searchYear: ', searchYear);
 
   if (!checkYear(searchYear)) {
     // searchYear = new Date().getFullYear();
@@ -196,10 +192,6 @@ function onAdvancedSearchElSubmit(event) {
   }
 
   optionsObj.primary_release_year = searchYear;
-  console.log(
-    'optionsObj.primary_release_year: ',
-    optionsObj.primary_release_year
-  );
 
   let isTheSameSettings = true;
   Object.keys(optionsObj).forEach(key => {

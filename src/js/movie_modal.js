@@ -41,7 +41,6 @@ async function updateMoviesList() {
       const allMoviesListFromStorage = await currentFilmList(
         auth.currentUser.uid
       );
-      console.log(allMoviesListFromStorage);
       const allMoviesList = allMoviesListFromStorage.currentFilmList || [];
       return allMoviesList;
     } catch {

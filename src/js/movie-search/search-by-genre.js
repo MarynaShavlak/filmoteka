@@ -29,7 +29,6 @@ function findMoviesByGenre(event) {
     return;
 
   let genre = event.target.innerText.trim();
-  // console.dir(event.target);
   if (genre[genre.length - 1] === ',') {
     genre = genre.slice(0, -1);
   }
@@ -59,7 +58,6 @@ function findMoviesByGenre(event) {
       scrollToTop();
 
       //form search params window
-      console.log('hello');
       searchRefs.advancedSearchChosenWindowEl.classList.remove(
         'visually-hidden'
       );
@@ -73,7 +71,6 @@ function findMoviesByGenre(event) {
       tooglePagination.isFilmsByYearShown = false;
       tooglePagination.isFilmsByGenreShown = true;
 
-      // console.log('findByYear', data);
       if (data.total_pages > 500) {
         paginationSettings.totalPages = 500;
       } else {

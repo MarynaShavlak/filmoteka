@@ -27,19 +27,15 @@ export function renderMoviesLibrary(movie) {
 
   const genresArr = genre_ids.split(',');
   let genres = [];
-  // const genresNamesToRender = getGenreDeciphered(item, genreNames);
   if (genresArr.length > 2) {
     genres.push(genresArr[0]);
     genres.push(genresArr[1]);
     genres.push('Other');
-    // console.log('genres:', genres);
   } else if (genresArr.length === 2) {
     genres.push(genresArr[0]);
     genres.push(genresArr[1]);
-    // console.log('genres:', genres);
   } else if (genresArr.length === 1) {
     genres.push(genresArr[0]);
-    // console.log('genres:', genres);
   }
 
   // /перевірка на кількість жанрів
@@ -62,15 +58,12 @@ export function renderMoviesLibrary(movie) {
   </li>
 	`;
 
-  // console.log(markUp);
   return markUp;
 }
 
-// -----------test
 function testImage(poster) {
   let tester = new Image();
   tester.addEventListener('load', () => true);
   tester.addEventListener('error', () => false);
   tester.src = poster;
 }
-// -----------test

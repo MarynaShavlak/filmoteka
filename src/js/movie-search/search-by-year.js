@@ -35,7 +35,6 @@ function findMoviesByYear(event) {
     .fetchMoviesByYear(year)
     .then(response => {
       const { data } = response;
-      console.log('in fetchMoviesByYear data: ', data);
 
       if (data.total_results === 0) {
         Notify.failure('Search result not successful.');
@@ -44,7 +43,6 @@ function findMoviesByYear(event) {
       scrollToTop();
 
       //form search params window
-      console.log('hello');
       searchRefs.advancedSearchChosenWindowEl.classList.remove(
         'visually-hidden'
       );

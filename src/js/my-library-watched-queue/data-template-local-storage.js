@@ -62,6 +62,6 @@ function settingItem(key, value) {
     const serializedState = JSON.stringify(value);
     localStorage.setItem(key, serializedState);
   } catch (error) {
-    console.log('Everyone makes mistakes, this is yours:', error.message);
+    console.log(error.message);
   }
 }
