@@ -3,10 +3,25 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding-top: 20px;
-
+  // padding-top: 20px;
+max-height:260px;
   font-size: 14px;
   line-height: 16px;
+  transition : max-height $cubic;
+
+.advanced-wrap {
+  padding-top: 20px;
+}
+@media screen and (min-width: 768px) {
+max-height:140px;
+}
+
+}
+
+
+.advanced-search.visually{
+max-height:0px;
+overflow: hidden;
 }
 
 

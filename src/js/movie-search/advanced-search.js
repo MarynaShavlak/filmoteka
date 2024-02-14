@@ -49,7 +49,7 @@ export function toggleAdvacedSearchMenu() {
 }
 export function showAdvacedSearchMenu() {
   setTimeout(() => {
-    searchRefs.advancedSearchEl.classList.remove('visually-hidden');
+    searchRefs.advancedSearchEl.classList.remove('visually');
     searchRefs.showAdvancedSearchEl.parentNode.classList.add('visually-hidden');
     searchRefs.hideAdvancedSearchEl.parentNode.classList.remove(
       'visually-hidden'
@@ -66,7 +66,7 @@ function hideAdvancedSearch(event) {
 }
 
 export function toggleAdvancedSearch() {
-  searchRefs.advancedSearchEl.classList.toggle('visually-hidden');
+  searchRefs.advancedSearchEl.classList.toggle('visually');
   searchRefs.showAdvancedSearchEl.parentNode.classList.toggle(
     'visually-hidden'
   );

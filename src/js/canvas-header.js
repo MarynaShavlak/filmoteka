@@ -62,10 +62,10 @@ class CanvasAnimation {
     const windowWidth = window.innerWidth;
     switch (true) {
       case windowWidth >= 320 && windowWidth < 768:
-        height = 606;
+        height = 490;
         break;
       case windowWidth >= 768 && windowWidth < 1280:
-        height = 928;
+        height = 350;
         break;
       case windowWidth >= 1280:
         height = 311;
