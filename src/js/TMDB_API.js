@@ -89,6 +89,7 @@ export default class TmdbAPI {
   #findByMovieResource = '/discover/movie';
   #genreMovieListResource = '/genre/movie/list';
   #findTrailersByIdResource = '/videos';
+
   #fetchGenreMoviesList() {
     return axios.get(
       `${TmdbAPI.BASE_URL}${this.#genreMovieListResource}?api_key=${
@@ -109,6 +110,14 @@ export default class TmdbAPI {
         TmdbAPI.genreIDs[el.name.toLowerCase()] = el.id;
       });
     });
+  }
+
+  #buildSearchUrl(paramsString) {
+    return (
+      `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
+        this.#API_KEY
+      }` + `${paramsString}`
+    );
   }
 
   constructor(page = 1) {
@@ -156,22 +165,59 @@ export default class TmdbAPI {
   }
 
   fetchMoviesByGenre(genre) {
-    return axios.get(
-      `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
-        this.#API_KEY
-      }&page=${this.page}&sort_by=popularity.desc&with_genres=${genre}`
-    );
+    const paramsString = `&page=${this.page}&sort_by=popularity.desc&with_genres=${genre}`;
+    const url = this.#buildSearchUrl(paramsString);
+    return axios.get(url);
   }
 
   fetchMoviesByYear(year) {
-    console.log('тут рік year: ', year);
-    return axios.get(
-      `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
-        this.#API_KEY
-      }&page=${this.page}&sort_by=popularity.desc&primary_release_year=${year}`
-    );
+    const paramsString = `&page=${this.page}&sort_by=popularity.desc&primary_release_year=${year}`;
+    const url = this.#buildSearchUrl(paramsString);
+    return axios.get(url);
   }
 
+  fetchMoviesByOnlyGenre(page, with_genres, include_adult = false) {
+    const paramsString = `&page=${page}&include_adult=${include_adult}&with_genres=${with_genres}`;
+    const url = this.#buildSearchUrl(paramsString);
+    return axios.get(url);
+  }
+
+  fetchMoviesWithoutGenre(page, without_genres_str, include_adult = false) {
+    const paramsString = `&page=${page}&include_adult=${include_adult}${without_genres_str}`;
+    const url = this.#buildSearchUrl(paramsString);
+    return axios.get(url);
+  }
+
+  fetchMoviesByMonetizationType(
+    page,
+    with_watch_monetization_types_str,
+    include_adult = false
+  ) {
+    const paramsString = `&page=${page}&include_adult=${include_adult}${with_watch_monetization_types_str}`;
+    const url = this.#buildSearchUrl(paramsString);
+    return axios.get(url);
+  }
+
+  fetchMoviesBySortType(page, sort_by, include_adult = false) {
+    const paramsString = `&page=${page}&include_adult=${include_adult}&sort_by=${sort_by}`;
+    const url = this.#buildSearchUrl(paramsString);
+    return axios.get(url);
+  }
+
+  fetchMoviesByFewParams(paramsObj) {
+    const {
+      page,
+      sort_by,
+      primary_release_year_str,
+      with_genres,
+      with_watch_monetization_types_str,
+      without_genres_str,
+      include_adult,
+    } = paramsObj;
+    const paramsString = `&page=${page}&sort_by=${sort_by}${primary_release_year_str}&with_genres=${with_genres}&include_adult=${include_adult}${with_watch_monetization_types_str}${without_genres_str}`;
+    const url = this.#buildSearchUrl(paramsString);
+    return axios.get(url);
+  }
   fetchAdvancedMovieSearch({
     primary_release_year,
     with_genres,
@@ -181,7 +227,6 @@ export default class TmdbAPI {
     with_watch_monetization_types,
     without_genres = null,
   }) {
-    console.log('тут я починаю поук');
     const with_watch_monetization_types_str = with_watch_monetization_types
       ? `&with_watch_monetization_types=${with_watch_monetization_types}`
       : '';
@@ -199,9 +244,7 @@ export default class TmdbAPI {
       !with_watch_monetization_types
     );
 
-    console.log('isSearchOnlyByYear: ', isSearchOnlyByYear);
     if (isSearchOnlyByYear) {
-      console.log('попала в пошук року');
       return this.fetchMoviesByYear(primary_release_year);
     }
 
@@ -212,15 +255,10 @@ export default class TmdbAPI {
       !with_watch_monetization_types
     );
 
-    console.log('isSearchOnlyByWithGenres: ', isSearchOnlyByWithGenres);
     if (isSearchOnlyByWithGenres) {
-      return axios.get(
-        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
-          this.#API_KEY
-        }&page=${page}&include_adult=${include_adult}&with_genres=${with_genres}`
-      );
+      return this.fetchMoviesByOnlyGenre(page, with_genres);
     }
-    //___________________
+
     const isSearchOnlyByWithoutGenres = !!(
       without_genres &&
       !primary_release_year &&
@@ -228,15 +266,10 @@ export default class TmdbAPI {
       !with_watch_monetization_types
     );
 
-    console.log('isSearchOnlyByWithoutGenres: ', isSearchOnlyByWithoutGenres);
     if (isSearchOnlyByWithoutGenres) {
-      return axios.get(
-        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
-          this.#API_KEY
-        }&page=${page}&include_adult=${include_adult}${without_genres_str}`
-      );
+      return this.fetchMoviesWithoutGenre(page, without_genres_str);
     }
-    //_______________
+
     const isSearchOnlyByMonetType = !!(
       with_watch_monetization_types &&
       !without_genres &&
@@ -244,35 +277,31 @@ export default class TmdbAPI {
       !with_genres
     );
 
-    console.log('isSearchOnlyByMonetType: ', isSearchOnlyByMonetType);
     if (isSearchOnlyByMonetType) {
-      return axios.get(
-        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
-          this.#API_KEY
-        }&page=${page}&include_adult=${include_adult}${with_watch_monetization_types_str}`
+      return this.fetchMoviesByMonetizationType(
+        page,
+        with_watch_monetization_types_str
       );
     }
 
-    //_______________________
     const isSearchOnlyBySortParam = !!(
       !with_watch_monetization_types &&
       !without_genres &&
       !primary_release_year &&
       !with_genres
     );
-    console.log('isSearchOnlyBySortParam: ', isSearchOnlyBySortParam);
     if (isSearchOnlyBySortParam) {
-      return axios.get(
-        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
-          this.#API_KEY
-        }&page=${page}&include_adult=${include_adult}&sort_by=${sort_by}`
-      );
+      return this.fetchMoviesBySortType(page, sort_by);
     }
-
-    return axios.get(
-      `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
-        this.#API_KEY
-      }&page=${page}&sort_by=${sort_by}${primary_release_year_str}&with_genres=${with_genres}&include_adult=${include_adult}${with_watch_monetization_types_str}${without_genres_str}`
-    );
+    const fewParamsObj = {
+      page,
+      sort_by,
+      primary_release_year_str,
+      with_genres,
+      with_watch_monetization_types_str,
+      without_genres_str,
+      include_adult,
+    };
+    return this.fetchMoviesByFewParams(fewParamsObj);
   }
 }
