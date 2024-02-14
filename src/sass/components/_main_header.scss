@@ -7,6 +7,7 @@
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
+  overflow-y: hidden;
 
   @media screen and (min-width: 768px) {
     padding-bottom: 75px;
@@ -38,6 +39,10 @@
     background-image: url(../images/home-background/desktop-background-home@2x.jpg);
   }
 }
+.container {
+  position: relative;
+   z-index: 2;
+}
 
 .header__link-container {
   position: relative;
@@ -59,15 +64,15 @@
 .nav {
   margin-right: auto;
   display: flex;
-  gap: 60px;
+  gap: 40px;
   align-items: center;
 
   @media screen and (min-width: 768px) {
-    gap: 320px;
+    gap: 270px;
   }
 
   @media screen and (min-width: 1280px) {
-    gap: 820px;
+    gap: 800px;
   }
 }
 
@@ -156,7 +161,7 @@
   }
 
   @media screen and (min-width: 320px) {
-    width: 280px;
+    width: 240px;
   }
 
   @media screen and (min-width: 768px) {

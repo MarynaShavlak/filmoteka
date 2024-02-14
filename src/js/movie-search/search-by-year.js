@@ -8,6 +8,7 @@ import {
 } from '../trending-search-main/trending-search.js';
 
 import { userSearchObj } from './search-by-keyword';
+import { toggleAdvancedSearch } from './advanced-search.js';
 
 //find movies by year
 searchRefs.galleryEl.addEventListener('click', findMoviesByYear);
@@ -47,7 +48,9 @@ function findMoviesByYear(event) {
         'visually-hidden'
       );
       searchRefs.advancedSearchChosenEl.innerHTML = `<div class='advanced-search__chosen-option'><span class='advanced-search__search-key'>primary release year: </span>${year}</div>`;
-
+      toggleAdvancedSearch();
+      searchRefs.advancedSearchWrap.classList.add('hide');
+      searchRefs.advacedSearchSubmitBtn.classList.add('hide');
       //inserting images into gallery
       searchRefs.galleryEl.innerHTML = makeHMTLString(data);
       tooglePagination.isTrendingFilmsShown = false;

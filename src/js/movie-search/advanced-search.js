@@ -14,6 +14,7 @@ import renderPopularFilms, {
   deletePaginationInterface,
   tooglePagination,
 } from '../trending-search-main/trending-search.js';
+import { canvasAnimation } from '../canvas-header.js';
 
 export let userAdvancedSearchForPagination = {
   primary_release_year: '',
@@ -48,7 +49,7 @@ function hideAdvancedSearch(event) {
   toggleAdvancedSearch();
 }
 
-function toggleAdvancedSearch() {
+export function toggleAdvancedSearch() {
   searchRefs.advancedSearchEl.classList.toggle('visually-hidden');
   searchRefs.showAdvancedSearchEl.parentNode.classList.toggle(
     'visually-hidden'
@@ -158,7 +159,6 @@ function hideAdvSearchWindow() {
 //callback function for event listener on button submit - when the advanced search form is submitted and on reset
 function onAdvancedSearchElSubmit(event) {
   event.preventDefault();
-
   //forming advanced search object
   const optionsObj = {
     with_genres: TmdbAPI.genreIDs[searchRefs.advancedSearchEl.genre.value],
@@ -235,10 +235,19 @@ function onAdvancedSearchElSubmit(event) {
   makeAdvancedSearch(optionsObj);
 }
 
-function onResetAdvancedSearch() {
+async function onResetAdvancedSearch() {
   clearAdvancedSearchForm();
   hideAdvSearchWindow();
-  renderPopularFilms(1);
+  if (
+    searchRefs.advancedSearchChosenWindowEl.classList.contains(
+      'visually-hidden'
+    )
+  ) {
+    searchRefs.advancedSearchEl.classList.add('visually-hidden');
+    searchRefs.advancedSearchWrap.classList.remove('hide');
+    searchRefs.advacedSearchSubmitBtn.classList.remove('hide');
+  }
+  await renderPopularFilms(1);
 }
 
 function checkYear(searchYear) {

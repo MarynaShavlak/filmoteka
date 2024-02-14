@@ -18,6 +18,7 @@ const searchRefs = {
   ),
   advancedSearchChosenEl: document.querySelector('.advanced-search__chosen'),
   resetAdvancedSearchBtn: document.querySelector('.advanced-search__reset'),
+  advacedSearchSubmitBtn: document.querySelector('.advanced-search__submit'),
 };
 
 //scroll to the top of the page

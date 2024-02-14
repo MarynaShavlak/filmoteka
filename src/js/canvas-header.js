@@ -44,7 +44,7 @@ class CanvasAnimation {
     this.canvas = canvas;
     this.ctx = this.canvas.getContext('2d');
     this.canvas.width = header.offsetWidth;
-    this.canvas.height = header.offsetHeight;
+    this.canvas.height = this.getInitialCanvasHeight();
     this.colorsArr = ['#FF001B', '#F7F7F7', '#FF001B'];
     this.circlesArr = [];
     this.initCircles();
@@ -55,6 +55,25 @@ class CanvasAnimation {
     });
 
     this.initAnimation();
+  }
+
+  getInitialCanvasHeight() {
+    let height;
+    const windowWidth = window.innerWidth;
+    switch (true) {
+      case windowWidth >= 320 && windowWidth < 768:
+        height = 606;
+        break;
+      case windowWidth >= 768 && windowWidth < 1280:
+        height = 928;
+        break;
+      case windowWidth >= 1280:
+        height = 311;
+        break;
+      default:
+        height = 606;
+    }
+    return height;
   }
 
   resizeCanvas() {
@@ -69,18 +88,18 @@ class CanvasAnimation {
     let maxCircleRadius;
 
     switch (true) {
-      case windowWidth >= 375 && windowWidth < 768:
-        circlesQuantity = 20;
+      case windowWidth >= 320 && windowWidth < 768:
+        circlesQuantity = 100;
         minCircleRadius = 1;
         maxCircleRadius = 3;
         break;
       case windowWidth >= 768 && windowWidth < 1280:
-        circlesQuantity = 30;
+        circlesQuantity = 50;
         minCircleRadius = 3;
         maxCircleRadius = 5;
         break;
       case windowWidth >= 1280:
-        circlesQuantity = 50;
+        circlesQuantity = 60;
         minCircleRadius = 5;
         maxCircleRadius = 15;
         break;
@@ -132,4 +151,4 @@ function randomRadius(min, max) {
 const header = document.querySelector('.header');
 
 const canvas = document.querySelector('.canvas-header');
-const canvasAnimation = new CanvasAnimation(canvas);
+export const canvasAnimation = new CanvasAnimation(canvas);

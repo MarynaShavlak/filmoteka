@@ -65,7 +65,7 @@ main {
   position: absolute;
   top: 0;
   left:-24px;
-filter: blur(1px);
+filter: blur(2px);
   @media screen and (min-width: 768px) {filter: blur(4px);}
   @media screen and (min-width: 1280px) {filter: blur(6px);}
   
