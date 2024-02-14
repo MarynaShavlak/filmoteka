@@ -30,7 +30,58 @@ export default class TmdbAPI {
   static IMG_BASE_URL = 'https://image.tmdb.org/t/p';
   static genres = {}; //obj {genre_id: genre_name}
   static genreIDs = {}; //obj {genre_name: genre_id}
-  // #API_KEY = '60bdd84997c9f2a4c6cd2341c547ed98';
+
+  static getGenresString(genre_ids) {
+    if (TmdbAPI.genres[genre_ids[0]] === undefined) {
+      TmdbAPI.genres[genre_ids[0]] = '';
+    }
+    if (TmdbAPI.genres[genre_ids[1]] === undefined) {
+      TmdbAPI.genres[genre_ids[1]] = '';
+    }
+    switch (genre_ids.length) {
+      case 0:
+        return '';
+        break;
+      case 1:
+        return `${TmdbAPI.genres[genre_ids[0]]}`;
+        break;
+      case 2:
+        return `${TmdbAPI.genres[genre_ids[0]]}, ${
+          TmdbAPI.genres[genre_ids[1]]
+        }`;
+        break;
+      default:
+        return `${TmdbAPI.genres[genre_ids[0]]}, ${
+          TmdbAPI.genres[genre_ids[1]]
+        }, Other`;
+        break;
+    }
+    if (genre_ids.length > 2) {
+      return `${TmdbAPI.genres[genre_ids[0]]}, `;
+    }
+  }
+
+  static getGenresStringWithSearchedGenre(genre_ids, genre) {
+    const genreID = TmdbAPI.genreIDs[genre.toLowerCase()];
+    const genreIndex = genre_ids.indexOf(genreID);
+
+    genre_ids.splice(genreIndex, 1);
+    if (genre_ids.length > 2) {
+      return `${TmdbAPI.genres[genre_ids[0]]}, `;
+    }
+    switch (genre_ids.length) {
+      case 1:
+        return `${genre}`;
+        break;
+      case 2:
+        return `${genre}, ${TmdbAPI.genres[genre_ids[0]]}`;
+        break;
+      default:
+        return `${genre}, ${TmdbAPI.genres[genre_ids[0]]}, Other`;
+        break;
+    }
+  }
+
   #API_KEY = '5c476485a2355f460fe2a5a523d9d1d5';
   #searchResource = '/search/movie';
   #trendingResource = '/trending';
@@ -38,6 +89,27 @@ export default class TmdbAPI {
   #findByMovieResource = '/discover/movie';
   #genreMovieListResource = '/genre/movie/list';
   #findTrailersByIdResource = '/videos';
+  #fetchGenreMoviesList() {
+    return axios.get(
+      `${TmdbAPI.BASE_URL}${this.#genreMovieListResource}?api_key=${
+        this.#API_KEY
+      }`
+    );
+  }
+
+  #createGenresObj() {
+    //if TmdbAPI.genres already has data - do not fetch again
+    if (Object.keys(TmdbAPI.genres).length !== 0) return;
+
+    this.#fetchGenreMoviesList().then(response => {
+      const genrArr = response.data.genres;
+
+      genrArr.forEach(el => {
+        TmdbAPI.genres[el.id] = el.name.toLowerCase();
+        TmdbAPI.genreIDs[el.name.toLowerCase()] = el.id;
+      });
+    });
+  }
 
   constructor(page = 1) {
     this.page = page;
@@ -120,87 +192,87 @@ export default class TmdbAPI {
       ? `&without_genres=${without_genres}`
       : '';
 
-    if (primary_release_year && !with_genres) {
+    const isSearchOnlyByYear = !!(
+      primary_release_year &&
+      !with_genres &&
+      !without_genres &&
+      !with_watch_monetization_types
+    );
+
+    console.log('isSearchOnlyByYear: ', isSearchOnlyByYear);
+    if (isSearchOnlyByYear) {
       console.log('попала в пошук року');
       return this.fetchMoviesByYear(primary_release_year);
     }
+
+    const isSearchOnlyByWithGenres = !!(
+      with_genres &&
+      !primary_release_year &&
+      !without_genres &&
+      !with_watch_monetization_types
+    );
+
+    console.log('isSearchOnlyByWithGenres: ', isSearchOnlyByWithGenres);
+    if (isSearchOnlyByWithGenres) {
+      return axios.get(
+        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
+          this.#API_KEY
+        }&page=${page}&include_adult=${include_adult}&with_genres=${with_genres}`
+      );
+    }
+    //___________________
+    const isSearchOnlyByWithoutGenres = !!(
+      without_genres &&
+      !primary_release_year &&
+      !with_genres &&
+      !with_watch_monetization_types
+    );
+
+    console.log('isSearchOnlyByWithoutGenres: ', isSearchOnlyByWithoutGenres);
+    if (isSearchOnlyByWithoutGenres) {
+      return axios.get(
+        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
+          this.#API_KEY
+        }&page=${page}&include_adult=${include_adult}${without_genres_str}`
+      );
+    }
+    //_______________
+    const isSearchOnlyByMonetType = !!(
+      with_watch_monetization_types &&
+      !without_genres &&
+      !primary_release_year &&
+      !with_genres
+    );
+
+    console.log('isSearchOnlyByMonetType: ', isSearchOnlyByMonetType);
+    if (isSearchOnlyByMonetType) {
+      return axios.get(
+        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
+          this.#API_KEY
+        }&page=${page}&include_adult=${include_adult}${with_watch_monetization_types_str}`
+      );
+    }
+
+    //_______________________
+    const isSearchOnlyBySortParam = !!(
+      !with_watch_monetization_types &&
+      !without_genres &&
+      !primary_release_year &&
+      !with_genres
+    );
+    console.log('isSearchOnlyBySortParam: ', isSearchOnlyBySortParam);
+    if (isSearchOnlyBySortParam) {
+      return axios.get(
+        `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
+          this.#API_KEY
+        }&page=${page}&include_adult=${include_adult}&sort_by=${sort_by}`
+      );
+    }
+
     return axios.get(
       `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
         this.#API_KEY
       }&page=${page}&sort_by=${sort_by}${primary_release_year_str}&with_genres=${with_genres}&include_adult=${include_adult}${with_watch_monetization_types_str}${without_genres_str}`
     );
-  }
-
-  #fetchGenreMoviesList() {
-    return axios.get(
-      `${TmdbAPI.BASE_URL}${this.#genreMovieListResource}?api_key=${
-        this.#API_KEY
-      }`
-    );
-  }
-
-  #createGenresObj() {
-    //if TmdbAPI.genres already has data - do not fetch again
-    if (Object.keys(TmdbAPI.genres).length !== 0) return;
-
-    this.#fetchGenreMoviesList().then(response => {
-      const genrArr = response.data.genres;
-
-      genrArr.forEach(el => {
-        TmdbAPI.genres[el.id] = el.name.toLowerCase();
-        TmdbAPI.genreIDs[el.name.toLowerCase()] = el.id;
-      });
-    });
-  }
-
-  static getGenresString(genre_ids) {
-    if (TmdbAPI.genres[genre_ids[0]] === undefined) {
-      TmdbAPI.genres[genre_ids[0]] = '';
-    }
-    if (TmdbAPI.genres[genre_ids[1]] === undefined) {
-      TmdbAPI.genres[genre_ids[1]] = '';
-    }
-    switch (genre_ids.length) {
-      case 0:
-        return '';
-        break;
-      case 1:
-        return `${TmdbAPI.genres[genre_ids[0]]}`;
-        break;
-      case 2:
-        return `${TmdbAPI.genres[genre_ids[0]]}, ${
-          TmdbAPI.genres[genre_ids[1]]
-        }`;
-        break;
-      default:
-        return `${TmdbAPI.genres[genre_ids[0]]}, ${
-          TmdbAPI.genres[genre_ids[1]]
-        }, Other`;
-        break;
-    }
-    if (genre_ids.length > 2) {
-      return `${TmdbAPI.genres[genre_ids[0]]}, `;
-    }
-  }
-
-  static getGenresStringWithSearchedGenre(genre_ids, genre) {
-    const genreID = TmdbAPI.genreIDs[genre.toLowerCase()];
-    const genreIndex = genre_ids.indexOf(genreID);
-
-    genre_ids.splice(genreIndex, 1);
-    if (genre_ids.length > 2) {
-      return `${TmdbAPI.genres[genre_ids[0]]}, `;
-    }
-    switch (genre_ids.length) {
-      case 1:
-        return `${genre}`;
-        break;
-      case 2:
-        return `${genre}, ${TmdbAPI.genres[genre_ids[0]]}`;
-        break;
-      default:
-        return `${genre}, ${TmdbAPI.genres[genre_ids[0]]}, Other`;
-        break;
-    }
   }
 }

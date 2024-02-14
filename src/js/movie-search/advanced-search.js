@@ -31,6 +31,10 @@ searchRefs.advancedSearchEl.addEventListener(
   'submit',
   onAdvancedSearchElSubmit
 );
+searchRefs.resetAdvancedSearchBtn.addEventListener(
+  'click',
+  onResetAdvancedSearch
+);
 
 function showAdvancedSearch(event) {
   if (!event.target.classList.value.includes('show-advanced-search-js')) return;
@@ -147,7 +151,12 @@ function changeAdvSearchWindow(obj) {
   )}`;
 }
 
-//callback function for event listener on button submit - when the advanced search form is submitted
+function hideAdvSearchWindow() {
+  searchRefs.advancedSearchChosenWindowEl.classList.add('visually-hidden');
+  searchRefs.advancedSearchChosenEl.innerHTML = ``;
+}
+
+//callback function for event listener on button submit - when the advanced search form is submitted and on reset
 function onAdvancedSearchElSubmit(event) {
   console.log('submit advanced seacrh');
   event.preventDefault();
@@ -232,6 +241,12 @@ function onAdvancedSearchElSubmit(event) {
   Notify.info('Searching');
   changeAdvSearchWindow(userAdvancedSearchForPagination);
   makeAdvancedSearch(optionsObj);
+}
+
+function onResetAdvancedSearch() {
+  clearAdvancedSearchForm();
+  hideAdvSearchWindow();
+  renderPopularFilms(1);
 }
 
 function checkYear(searchYear) {

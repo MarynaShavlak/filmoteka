@@ -124,7 +124,6 @@
   transition: border-color $cubic, color $cubic, background-color $cubic;
 
   &:hover,
-  &:focus,
   &:active {
     border-color: $primary-black-color;
     color: $primary-black-color;

@@ -1684,10 +1684,8 @@ button {
     background-color 0.25s ease-out, box-shadow 0.25s ease-out;
 }
 .advanced-search__submit:hover,
-.advanced-search__submit:focus,
 .advanced-search__submit:active,
 .advanced-search__reset:hover,
-.advanced-search__reset:focus,
 .advanced-search__reset:active {
   border: 1px solid #000000;
   color: #000000;
