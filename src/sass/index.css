@@ -1665,7 +1665,8 @@ button {
   cursor: pointer;
 }
 
-.advanced-search__submit {
+.advanced-search__submit,
+.advanced-search__reset {
   margin-top: 15px;
   padding: 6px 27px;
   display: flex;
@@ -1684,7 +1685,10 @@ button {
 }
 .advanced-search__submit:hover,
 .advanced-search__submit:focus,
-.advanced-search__submit:active {
+.advanced-search__submit:active,
+.advanced-search__reset:hover,
+.advanced-search__reset:focus,
+.advanced-search__reset:active {
   border: 1px solid #000000;
   color: #000000;
   background-color: #ffffff;
@@ -1701,7 +1705,8 @@ button {
   .advanced-search__select {
     margin-bottom: 0;
   }
-  .advanced-search__submit {
+  .advanced-search__submit,
+  .advanced-search__reset {
     margin-top: 0;
   }
 }

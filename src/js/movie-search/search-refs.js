@@ -12,6 +12,7 @@ const searchRefs = {
   showAdvancedSearchEl: document.querySelector('.show-advanced-search-js'),
   hideAdvancedSearchEl: document.querySelector('.hide-advanced-search-js'),
   advancedSearchEl: document.querySelector('.search--advanced-js '),
+  advancedSearchWrap: document.querySelector('.search--advanced-js div '),
   advancedSearchChosenWindowEl: document.querySelector(
     '.advanced-search__chosen-window'
   ),

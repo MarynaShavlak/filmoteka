@@ -121,6 +121,7 @@ export default class TmdbAPI {
       : '';
 
     if (primary_release_year && !with_genres) {
+      console.log('попала в пошук року');
       return this.fetchMoviesByYear(primary_release_year);
     }
     return axios.get(

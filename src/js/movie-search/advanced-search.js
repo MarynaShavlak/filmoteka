@@ -36,7 +36,7 @@ function showAdvancedSearch(event) {
   if (!event.target.classList.value.includes('show-advanced-search-js')) return;
   setTimeout(() => toggleAdvancedSearch(), 100);
   if (areOptionsGenerated) return;
-  generateSelectOptions(searchRefs.advancedSearchEl);
+  generateSelectOptions(searchRefs.advancedSearchWrap);
 }
 
 function hideAdvancedSearch(event) {
