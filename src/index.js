@@ -9,5 +9,4 @@ import './js/movie-search/search-by-keyword';
 import './js/movie-search/search-by-year';
 import './js/movie-search/search-by-genre';
 import './js/movie-search/advanced-search';
-import './js/canvas.js';
 import './js/canvas-header.js';

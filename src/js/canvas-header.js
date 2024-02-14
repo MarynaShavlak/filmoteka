@@ -1,96 +1,135 @@
-//__________________
-let canvas = document.getElementById('canvas-header');
-let c = init('canvas-header');
-// let w = (c.width = window.innerWidth);
-// let h = (c.height = window.innerHeight);
-let w = (canvas.width = '1280');
-let h = (canvas.height = '400');
-//initiation
-
-class firefly {
-  constructor() {
-    this.x = Math.random() * w;
-    this.y = Math.random() * h;
-    this.s = Math.random() * 4;
-    this.ang = Math.random() * 2 * Math.PI;
-    this.v = (this.s * this.s) / 4;
+class Circle {
+  constructor(x, y, radius, speedX, speedY, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.speedX = speedX;
+    this.speedY = speedY;
+    this.color = color;
+    this.canvas = document.querySelector('.canvas-header');
   }
+
+  draw(ctx) {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    ctx.strokeStyle = this.color;
+    ctx.fillStyle = this.color;
+    ctx.stroke();
+    ctx.fill();
+  }
+
   move() {
-    this.x += this.v * Math.cos(this.ang);
-    this.y += this.v * Math.sin(this.ang);
-    this.ang += (Math.random() * 20 * Math.PI) / 180 - (10 * Math.PI) / 180;
-  }
-  show() {
-    c.beginPath();
-    c.arc(this.x, this.y, this.s, 0, 2 * Math.PI);
-    c.fillStyle = '#fddba3';
-    c.fill();
-  }
-}
-
-let f = [];
-
-function draw() {
-  if (f.length < 100) {
-    for (let j = 0; j < 10; j++) {
-      f.push(new firefly());
+    const header = document.querySelector('.header');
+    if (this.x + this.radius > header.offsetWidth || this.x - this.radius < 0) {
+      this.speedX = -this.speedX;
     }
-  }
-  //animation
-  for (let i = 0; i < f.length; i++) {
-    f[i].move();
-    f[i].show();
-    if (f[i].x < 0 || f[i].x > w || f[i].y < 0 || f[i].y > h) {
-      f.splice(i, 1);
+    if (
+      this.y + this.radius > header.offsetHeight ||
+      this.y - this.radius < 0
+    ) {
+      this.speedY = -this.speedY;
     }
+    this.x += this.speedX;
+    this.y += this.speedY;
+  }
+
+  update(ctx) {
+    this.draw(ctx);
+    this.move();
   }
 }
 
-let mouse = {};
-let last_mouse = {};
+class CanvasAnimation {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.ctx = this.canvas.getContext('2d');
+    this.canvas.width = header.offsetWidth;
+    this.canvas.height = header.offsetHeight;
+    this.colorsArr = ['#FF001B', '#F7F7F7', '#FF001B'];
+    this.circlesArr = [];
+    this.initCircles();
 
-canvas.addEventListener(
-  'mousemove',
-  function (e) {
-    last_mouse.x = mouse.x;
-    last_mouse.y = mouse.y;
+    window.addEventListener('resize', () => {
+      this.resizeCanvas();
+      this.resetAllCircles();
+    });
 
-    mouse.x = e.pageX - this.offsetLeft;
-    mouse.y = e.pageY - this.offsetTop;
-  },
-  false
-);
-function init(elemid) {
-  let canvas = document.getElementById(elemid),
-    c = canvas.getContext('2d'),
-    w = (canvas.width = window.innerWidth),
-    h = (canvas.height = window.innerHeight);
-  console.log('canvas: ', canvas);
-  c.fillStyle = 'rgba(30,30,30,1)';
-  c.fillRect(0, 0, w, h);
-  return c;
-}
+    this.initAnimation();
+  }
 
-requestAnimFrame = function () {
-  return (
-    window.requestAnimationFrame ||
-    function (callback) {
-      window.setTimeout(callback);
+  resizeCanvas() {
+    this.canvas.width = header.offsetWidth;
+    this.canvas.height = header.offsetHeight;
+    this.canvas.style.left = '0';
+  }
+  initCircles() {
+    const windowWidth = window.innerWidth;
+    let circlesQuantity;
+    let minCircleRadius;
+    let maxCircleRadius;
+
+    switch (true) {
+      case windowWidth >= 375 && windowWidth < 768:
+        circlesQuantity = 20;
+        minCircleRadius = 1;
+        maxCircleRadius = 3;
+        break;
+      case windowWidth >= 768 && windowWidth < 1280:
+        circlesQuantity = 30;
+        minCircleRadius = 3;
+        maxCircleRadius = 5;
+        break;
+      case windowWidth >= 1280:
+        circlesQuantity = 50;
+        minCircleRadius = 5;
+        maxCircleRadius = 15;
+        break;
+      default:
+        circlesQuantity = 20;
+        minCircleRadius = 1;
+        maxCircleRadius = 3;
     }
-  );
-};
 
-function loop() {
-  requestAnimFrame(loop);
-  c.clearRect(0, 0, w, h);
-  draw();
+    this.circlesArr = Array.from({ length: circlesQuantity }, () => {
+      const radius = randomRadius(minCircleRadius, maxCircleRadius);
+      const x = Math.random() * (this.canvas.width - radius * 2) + radius;
+      const y = Math.random() * (this.canvas.height - radius * 2) + radius;
+      const speedX = (Math.random() - 0.1) * 2;
+      const speedY = (Math.random() - 0.1) * 2;
+      const color = this.colorsArr[randomNumber(0, this.colorsArr.length - 1)];
+
+      return new Circle(x, y, radius, speedX, speedY, color);
+    });
+  }
+
+  resetAllCircles() {
+    this.circlesArr.forEach(circle => {
+      circle.x =
+        Math.random() * (this.canvas.width - circle.radius * 2) + circle.radius;
+      circle.y =
+        Math.random() * (this.canvas.height - circle.radius * 2) +
+        circle.radius;
+    });
+  }
+
+  initAnimation() {
+    requestAnimationFrame(() => this.initAnimation());
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.circlesArr.forEach(circle => {
+      circle.update(this.ctx);
+    });
+  }
 }
 
-window.addEventListener('resize', function () {
-  (w = canvas.width = window.innerWidth),
-    (h = canvas.height = window.innerHeight);
-  loop();
-});
+function randomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+function randomRadius(min, max) {
+  return Number((Math.random() * (max - min) + min).toFixed(1));
+}
 
-loop();
-setInterval(loop, 1000 / 60);
+const header = document.querySelector('.header');
+
+const canvas = document.querySelector('.canvas-header');
+const canvasAnimation = new CanvasAnimation(canvas);

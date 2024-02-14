@@ -8,3 +8,4 @@ setTimeout(spinnerStop, 1000);
 import './js/scroll_to_top';
 import './js/movie_modal-library.js';
 import './js/openModalWindow.js';
+import './js/canvas-header.js';
