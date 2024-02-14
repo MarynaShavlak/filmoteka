@@ -37,9 +37,25 @@ searchRefs.resetAdvancedSearchBtn.addEventListener(
   onResetAdvancedSearch
 );
 
-function showAdvancedSearch(event) {
+export function showAdvancedSearch(event) {
   if (!event.target.classList.value.includes('show-advanced-search-js')) return;
+  toggleAdvacedSearchMenu();
+}
+
+export function toggleAdvacedSearchMenu() {
   setTimeout(() => toggleAdvancedSearch(), 100);
+  if (areOptionsGenerated) return;
+  generateSelectOptions(searchRefs.advancedSearchWrap);
+}
+export function showAdvacedSearchMenu() {
+  setTimeout(() => {
+    searchRefs.advancedSearchEl.classList.remove('visually-hidden');
+    searchRefs.showAdvancedSearchEl.parentNode.classList.add('visually-hidden');
+    searchRefs.hideAdvancedSearchEl.parentNode.classList.remove(
+      'visually-hidden'
+    );
+  }, 100);
+
   if (areOptionsGenerated) return;
   generateSelectOptions(searchRefs.advancedSearchWrap);
 }
@@ -237,16 +253,9 @@ function onAdvancedSearchElSubmit(event) {
 
 async function onResetAdvancedSearch() {
   clearAdvancedSearchForm();
-  hideAdvSearchWindow();
-  if (
-    searchRefs.advancedSearchChosenWindowEl.classList.contains(
-      'visually-hidden'
-    )
-  ) {
-    searchRefs.advancedSearchEl.classList.add('visually-hidden');
-    searchRefs.advancedSearchWrap.classList.remove('hide');
-    searchRefs.advacedSearchSubmitBtn.classList.remove('hide');
-  }
+  tooglePagination.isFilmsByYearShown = false;
+  tooglePagination.isFilmsByGenreShown = false;
+  searchRefs.advancedSearchChosenWindowEl.classList.add('visually-hidden');
   await renderPopularFilms(1);
 }
 

@@ -14,6 +14,7 @@ import {
 } from '../trending-search-main/trending-search.js';
 import { CLIENT_RENEG_LIMIT } from 'tls';
 import { userSearchObj } from './search-by-keyword';
+import { showAdvacedSearchMenu } from './advanced-search.js';
 
 // export let userGenreForPagination = '';
 
@@ -62,6 +63,8 @@ function findMoviesByGenre(event) {
         'visually-hidden'
       );
       searchRefs.advancedSearchChosenEl.innerHTML = `<div class='advanced-search__chosen-option'><span class='advanced-search__search-key'>genre: </span>${genre.toLowerCase()}</div>`;
+      showAdvacedSearchMenu();
+      updateSelectGenreOption(genre);
 
       //form img gallery
       searchRefs.galleryEl.innerHTML = makeHMTLStringWithGenre(data, genre);
@@ -84,4 +87,16 @@ function findMoviesByGenre(event) {
       console.error(error);
       Notify.failure('No films with such genre found!');
     });
+}
+
+function updateSelectGenreOption(genre) {
+  const advacedSearchGenreSelect = document.querySelector(
+    '.advanced-search__genre'
+  );
+  advacedSearchGenreSelect.value = genre;
+  const options = Array.from(advacedSearchGenreSelect.options);
+  const optionToSelect = options.find(
+    item => item.label === genre.toLowerCase()
+  );
+  optionToSelect.selected = true;
 }
