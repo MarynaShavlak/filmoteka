@@ -30,7 +30,8 @@ export default class TmdbAPI {
   static IMG_BASE_URL = 'https://image.tmdb.org/t/p';
   static genres = {}; //obj {genre_id: genre_name}
   static genreIDs = {}; //obj {genre_name: genre_id}
-  #API_KEY = '60bdd84997c9f2a4c6cd2341c547ed98';
+  // #API_KEY = '60bdd84997c9f2a4c6cd2341c547ed98';
+  #API_KEY = '5c476485a2355f460fe2a5a523d9d1d5';
   #searchResource = '/search/movie';
   #trendingResource = '/trending';
   #findByIdResource = '/movie';
@@ -91,6 +92,7 @@ export default class TmdbAPI {
   }
 
   fetchMoviesByYear(year) {
+    console.log('тут рік year: ', year);
     return axios.get(
       `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
         this.#API_KEY
@@ -107,6 +109,7 @@ export default class TmdbAPI {
     with_watch_monetization_types,
     without_genres = null,
   }) {
+    console.log('тут я починаю поук');
     const with_watch_monetization_types_str = with_watch_monetization_types
       ? `&with_watch_monetization_types=${with_watch_monetization_types}`
       : '';
@@ -116,10 +119,14 @@ export default class TmdbAPI {
     const without_genres_str = without_genres
       ? `&without_genres=${without_genres}`
       : '';
+
+    if (primary_release_year && !with_genres) {
+      return this.fetchMoviesByYear(primary_release_year);
+    }
     return axios.get(
       `${TmdbAPI.BASE_URL}${this.#findByMovieResource}?api_key=${
         this.#API_KEY
-      }&page=${page}&sort_by=${sort_by}&${primary_release_year_str}&with_genres=${with_genres}&include_adult=${include_adult}${with_watch_monetization_types_str}${without_genres_str}`
+      }&page=${page}&sort_by=${sort_by}${primary_release_year_str}&with_genres=${with_genres}&include_adult=${include_adult}${with_watch_monetization_types_str}${without_genres_str}`
     );
   }
 
