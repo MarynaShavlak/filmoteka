@@ -32,10 +32,10 @@ function createVideoFrame(key) {
       class="trailer-modal__video"
       width="100%"
       height="100%"
-      src="https://www.youtube.com/embed/${key}?autoplay=1"
+      src="https://www.youtube.com/embed/${key}?autoplay=0&mute=1&volume=0"
       title="TITLE"
       frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       allowfullscreen
     ></iframe>
 </div>`,
@@ -43,8 +43,6 @@ function createVideoFrame(key) {
       onShow: instance => {
         document.addEventListener('keydown', onEscClose);
       },
-    },
-    {
       onClose: instance => {
         document.removeEventListener('keydown', onEscClose);
       },
