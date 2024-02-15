@@ -20,7 +20,7 @@ class Circle {
 
   move() {
     const header = document.querySelector('.header');
-    if (this.x + this.radius > header.offsetWidth || this.x - this.radius < 0) {
+    if (this.x + this.radius > window.innerWidth || this.x - this.radius < 0) {
       this.speedX = -this.speedX;
     }
     if (
@@ -43,7 +43,7 @@ class CanvasAnimation {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = this.canvas.getContext('2d');
-    this.canvas.width = header.offsetWidth;
+    this.canvas.width = window.innerWidth;
     this.canvas.height = this.getInitialCanvasHeight();
     this.colorsArr = ['#FF001B', '#F7F7F7', '#FF001B'];
     this.circlesArr = [];
@@ -77,9 +77,9 @@ class CanvasAnimation {
   }
 
   resizeCanvas() {
-    this.canvas.width = header.offsetWidth;
+    this.canvas.width = window.innerWidth;
     this.canvas.height = header.offsetHeight;
-    this.canvas.style.left = '0';
+    // this.canvas.style.left = '0';
   }
   initCircles() {
     const windowWidth = window.innerWidth;

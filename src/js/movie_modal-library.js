@@ -52,7 +52,13 @@ async function updateMoviesList() {
 }
 export async function showModal(e) {
   if (e.target.nodeName === 'IMG' || e.target.nodeName === 'SPAN') {
+    const main = document.querySelector('main');
+    const mainHeight = main.offsetHeight;
     innerModal.innerHTML = '';
+    const top = window.scrollY;
+    body.style.position = 'fixed';
+    body.style.top = `-${top}px`;
+    main.style.height = `${mainHeight}px`;
     modal.classList.remove('hidden-movie-modal');
     overflow.classList.remove('hidden-movie-modal');
     overflow.classList.add('overflow-height');
@@ -66,9 +72,10 @@ export async function showModal(e) {
         ? e.target.dataset.id
         : e.target.closest('li').dataset.id;
     await createModal(id);
-    const top = window.scrollY;
-    body.style.position = 'fixed';
-    body.style.top = `-${top}px`;
+    // const top = window.scrollY;
+    // body.style.position = 'fixed';
+    // body.style.top = `-${top}px`;
+    // main.style.height = `${mainHeight}px`;
     const watchedBtn = document.querySelector('.modal__btn-watched');
     const queueBtn = document.querySelector('.modal__btn-queue');
     const watchTrailerBtn = document.querySelector(
@@ -91,6 +98,7 @@ function closeModalOnEsc(e) {
   if (e.code === 'Escape') closeModal();
 }
 function closeModal() {
+  const main = document.querySelector('main');
   modal.classList.add('hidden-movie-modal');
   overflow.classList.add('hidden-movie-modal');
   overflow.classList.remove('overflow-height');
@@ -101,6 +109,7 @@ function closeModal() {
   const top = body.style.top;
   body.style.position = '';
   body.style.top = '';
+  main.style.height = `auto`;
   window.scrollTo(0, parseInt(top || '0') * -1);
 }
 
