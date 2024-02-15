@@ -37,7 +37,6 @@ screen.addEventListener('change', onChange);
 const cardList = document.querySelector('.trending-gallery');
 
 async function createMarkup(data) {
-  console.log('data: ', data);
   try {
     const imageBaseURL = await getImages();
     const genreNames = TmdbAPI.genres;

@@ -4,7 +4,6 @@ import emptyphoto from '../../images/empty-photo/empty-poster.jpg';
 const IMG_PATH = 'https://image.tmdb.org/t/p/original';
 
 export function renderMoviesLibrary(movie) {
-  console.log('movie: ', movie);
   const { poster_path, title, genre_ids, release_date, vote_average, id } =
     movie;
   let poster = `${IMG_PATH}${poster_path}`;
@@ -55,6 +54,7 @@ export function renderMoviesLibrary(movie) {
         ', '
       )} | <span class='movie-year'>${releaseDate}</span> <span class='movie-rating'>${voteAverageFixed}</span></p>
     </div>
+    
     
   </li>
 	`;

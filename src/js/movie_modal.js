@@ -51,7 +51,8 @@ async function updateMoviesList() {
 export async function showModal(e) {
   if (
     e.target.nodeName === 'IMG' ||
-    e.target.className === 'title-modal-open'
+    e.target.className === 'title-modal-open' ||
+    e.target.className === 'trending-gallery__btn-more'
   ) {
     innerModal.innerHTML = '';
     modal.classList.remove('hidden-movie-modal');

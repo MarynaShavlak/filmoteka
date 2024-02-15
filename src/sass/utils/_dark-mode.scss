@@ -115,6 +115,10 @@ body.darkmode--activated,
   color: white;
 }
 
+.darkmode--activated .trending-gallery__item {
+   background-color:#000;
+}
+
 .darkmode--activated .pagination__btn {
   background-color: $primary-black-color;
   color: $primary-white-color;
@@ -189,10 +193,14 @@ body.darkmode--activated,
   text-shadow: 0.2px 0.2px 0.2px $primary-black-color;
 }
 
-.darkmode--activated .trending-gallery__item:hover,
-.darkmode--activated .trending-gallery__item:focus {
+.darkmode--activated .trending-gallery .trending-gallery__item:hover .trending-gallery__desc-wrap,
+.darkmode--activated .trending-gallery .trending-gallery__item:focus .trending-gallery__desc-wrap {
   box-shadow: 0 1px 1px $main-accent-color, 0 4px 4px $active-btn-color,
     1px 4px 6px $main-accent-color;
+}
+
+.darkmode--activated .trending-gallery .trending-gallery__item:hover .trending-gallery__desc {
+   color: $primary-white-color;
 }
 
 .darkmode--activated .no-movies {

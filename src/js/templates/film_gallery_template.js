@@ -47,9 +47,15 @@ function addAdaptiveImgHTMLString(result) {
 }
 
 export default function makeHMTLString({ results }) {
-  console.log('results : ', results);
   return results
     .map(result => {
+      const textDesc =
+        result.overview.length < 340
+          ? result.overview
+          : `${result.overview.slice(0, 340)}...`;
+      const genres = getGenresHTMLString(
+        TmdbAPI.getGenresString(result.genre_ids)
+      );
       //checking release date: if none - return 'No info', else return year
       if (!result.release_date || result.release_date === '') {
         result.release_date = 'No info';
@@ -68,6 +74,21 @@ export default function makeHMTLString({ results }) {
         TmdbAPI.getGenresString(result.genre_ids)
       )} | <span class='find-by-year-js'>${result.release_date}</span></p>
     </div>
+    <div class="trending-gallery__desc-wrap">
+                    <h3 class="trending-gallery__title" ><span class="title-modal-open" data-id="${
+                      result.id
+                    }">${result.title}</span>
+                        </h3>
+                        <p class="trending-gallery__info">${genres}
+                              <span class="find-by-year-js">${result.release_date.slice(
+                                0,
+                                4
+                              )}</span>
+                              </p>
+                        <p class="trending-gallery__desc">${textDesc}</p>
+                        
+                        <button type="button" class="trending-gallery__btn-more">Read more</button>
+                    </div>
   </li>
 	`;
     })
@@ -84,7 +105,13 @@ export function makeHMTLStringWithGenre({ results }, genre) {
       } else {
         result.release_date = result.release_date.slice(0, 4);
       }
-
+      const textDesc =
+        result.overview.length < 340
+          ? result.overview
+          : `${result.overview.slice(0, 340)}...`;
+      const genres = getGenresHTMLString(
+        TmdbAPI.getGenresStringWithSearchedGenre(result.genre_ids, genre)
+      );
       return `
 	<li class='trending-gallery__item'  data-id="${result.id}">
     ${addAdaptiveImgHTMLString(result)}
@@ -92,13 +119,26 @@ export function makeHMTLStringWithGenre({ results }, genre) {
     	<h3 class='trending-gallery__title'><span class="title-modal-open">${
         result.title
       }</span></h3>
-    	<p class='trending-gallery__info'>${getGenresHTMLString(
-        TmdbAPI.getGenresStringWithSearchedGenre(result.genre_ids, genre)
-      )} | <span class='find-by-year-js'>${result.release_date.slice(
+    	<p class='trending-gallery__info'>${genres} | <span class='find-by-year-js'>${result.release_date.slice(
         0,
         4
       )}</span></p>
     </div>
+    <div class="trending-gallery__desc-wrap">
+                    <h3 class="trending-gallery__title" ><span class="title-modal-open" data-id="${
+                      result.id
+                    }">${result.title}</span>
+                        </h3>
+                        <p class="trending-gallery__info">${genres}
+                              <span class="find-by-year-js">${result.release_date.slice(
+                                0,
+                                4
+                              )}</span>
+                              </p>
+                        <p class="trending-gallery__desc">${textDesc}</p>
+                        
+                        <button type="button" class="trending-gallery__btn-more">Read more</button>
+                    </div>
   </li>
 	`;
     })
