@@ -83,20 +83,20 @@ function generateSelectOptions(form) {
     )
     .join('');
   const selectGenreHtmlStr = `
-		<select name="genre" id="" class="advanced-search__genre advanced-search__select">
+		<select name="genre"  class="advanced-search__genre advanced-search__select">
 			<option value="" class="advanced-search__option--main">Choose genre to find</option>
 			${genreOptionsHtmlStr}
 		</select>`;
   //forming exlude genre select HTML
   const excludeGenreHtmlStr = `
-		<select name="excludeGenre" id=""
+		<select name="excludeGenre" 
 			class="advanced-search__exlude-genre advanced-search__select">
 			<option value="" class="advanced-search__option--main">Choose genre to exlude</option>
 			${genreOptionsHtmlStr}
 		</select>`;
   //forming sort parameters select HTML
   const sortParamsStr = `
-		<select name="sortParams" id="" 		class="advanced-search__sort-buy advanced-search__select">
+		<select name="sortParams" 		class="advanced-search__sort-buy advanced-search__select">
 			<option value="" class="advanced-search__option--main">Choose sorting parameter</option>
 			${Object.keys(TmdbAPI.sort_by_types)
         .map(
@@ -251,10 +251,13 @@ function onAdvancedSearchElSubmit(event) {
   makeAdvancedSearch(optionsObj);
 }
 
-async function onResetAdvancedSearch() {
+export async function onResetAdvancedSearch() {
   clearAdvancedSearchForm();
   tooglePagination.isFilmsByYearShown = false;
   tooglePagination.isFilmsByGenreShown = false;
+  tooglePagination.isFilmsByQueryShown = false;
+  tooglePagination.isFilmsByAdvancedSearchShown = false;
+  tooglePagination.isTrendingFilmsShown = true;
   searchRefs.advancedSearchChosenWindowEl.classList.add('visually-hidden');
   await renderPopularFilms(1);
 }

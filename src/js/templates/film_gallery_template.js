@@ -96,7 +96,6 @@ export default function makeHMTLString({ results }) {
 }
 
 export function makeHMTLStringWithGenre({ results }, genre) {
-  console.log('results : ', results);
   return results
     .map(result => {
       //checking release date: if none - return 'No info', else return year

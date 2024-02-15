@@ -16,7 +16,11 @@ import {
 } from '../trending-search-main/trending-search.js';
 
 import renderPopularFilms from '../trending-search-main/trending-search';
+import { onResetAdvancedSearch } from './advanced-search.js';
 
+window.onResetAdvancedSearch = () => {
+  onResetAdvancedSearch();
+};
 export const userSearchObj = {
   userQueryForPagination: '',
   userYearForPagination: '',
@@ -53,7 +57,10 @@ async function onSearchInputElChange(event) {
 
     //showing search parameters window
     searchRefs.advancedSearchChosenWindowEl.classList.remove('visually-hidden');
-    searchRefs.advancedSearchChosenEl.innerHTML = `<div class='advanced-search__chosen-option'><span class='advanced-search__search-key'>search word: </span>${query}</div>`;
+    searchRefs.advancedSearchChosenEl.innerHTML = `<div class='advanced-search__chosen-option'>
+    <span class='advanced-search__search-key'>search word: </span>${query}
+     <button class="advanced-search__reset advanced-search__key-reset" type="button" onclick='onResetAdvancedSearch()'>Reset</button>
+     </div>`;
     //inserting images into gallery
     searchRefs.galleryEl.innerHTML = makeHMTLString(data);
     tooglePagination.isTrendingFilmsShown = false;
