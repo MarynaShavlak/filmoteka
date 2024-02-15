@@ -37,12 +37,17 @@ screen.addEventListener('change', onChange);
 const cardList = document.querySelector('.trending-gallery');
 
 async function createMarkup(data) {
+  console.log('data: ', data);
   try {
     const imageBaseURL = await getImages();
     const genreNames = TmdbAPI.genres;
 
     const markup = data
       .map(item => {
+        const textDesc =
+          item.overview.length < 340
+            ? item.overview
+            : `${item.overview.slice(0, 340)}...`;
         let genres = '';
         const genresNamesToRender = getGenreDeciphered(item, genreNames);
 
@@ -77,6 +82,21 @@ async function createMarkup(data) {
                                 4
                               )}</span>
                               </p>
+                    </div>
+                    <div class="trending-gallery__desc-wrap">
+                    <h3 class="trending-gallery__title" ><span class="title-modal-open" data-id="${
+                      item.id
+                    }">${item.title}</span>
+                        </h3>
+                        <p class="trending-gallery__info">${genres}
+                              <span class="find-by-year-js">${item.release_date.slice(
+                                0,
+                                4
+                              )}</span>
+                              </p>
+                        <p class="trending-gallery__desc">${textDesc}</p>
+                        
+                        <button type="button" class="trending-gallery__btn-more">Read more</button>
                     </div>
                   
                 </li>`;
