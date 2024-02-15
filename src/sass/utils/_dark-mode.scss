@@ -17,9 +17,7 @@
     bottom: -70px;
   }
 
-  .darkmode--activated & {
-    // left: calc(50vw - 30.5px);
-  }
+ 
 }
 
 .dark-toggle-switch {
@@ -118,6 +116,11 @@ body.darkmode--activated,
 .darkmode--activated .trending-gallery__item {
    background-color:#000;
 }
+
+.darkmode--activated .trending-gallery__item  .trending-gallery__desc-wrap{
+   background-color:#000;
+}
+
 
 .darkmode--activated .pagination__btn {
   background-color: $primary-black-color;
