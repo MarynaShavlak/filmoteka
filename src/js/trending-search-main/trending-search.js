@@ -124,7 +124,13 @@ async function renderPopularFilms(page) {
     const markup = await createMarkup(films.results);
 
     cardList.innerHTML = markup;
-    paginationSettings.totalPages = films.total_pages;
+    if (films.total_pages > 500) {
+      paginationSettings.totalPages = 500;
+    } else {
+      paginationSettings.totalPages = films.total_pages;
+    }
+
+    // paginationSettings.totalPages = films.total_pages;
     tooglePagination.isTrendingFilmsShown = true;
 
     if (films) renderPaginationInterface(page, paginationSettings.totalPages);
