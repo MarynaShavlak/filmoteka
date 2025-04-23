@@ -1,5 +1,5 @@
-import TmdbAPI from '../TMDB_API';
-import emptyphoto from '../../images/empty-photo/desktop-empty-poster.jpg';
+import TmdbAPI from '../../api/TMDB_API';
+import emptyphoto from '../../../images/empty-photo/desktop-empty-poster.jpg';
 
 //converts string with genre names to HTML string with tags
 function getGenresHTMLString(str) {
@@ -86,7 +86,7 @@ export default function makeHMTLString({ results }) {
                               )}</span>
                               </p>
                         <p class="trending-gallery__desc">${textDesc}</p>
-                        
+
                         <button type="button" class="trending-gallery__btn-more">Read more</button>
                     </div>
   </li>
@@ -135,7 +135,7 @@ export function makeHMTLStringWithGenre({ results }, genre) {
                               )}</span>
                               </p>
                         <p class="trending-gallery__desc">${textDesc}</p>
-                        
+
                         <button type="button" class="trending-gallery__btn-more">Read more</button>
                     </div>
   </li>

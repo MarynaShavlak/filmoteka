@@ -4,15 +4,13 @@ import {
   writeUserDataWatch,
   currentFilmList,
   readAllUserData,
-} from './authFireBase.js';
-import { refs } from './refs';
+} from '../../auth/authFireBase.js';
+import { refs } from '../../utils/refs';
 import Notiflix from 'notiflix';
 import { renderModal } from './render_modal';
-import { onTrailerBtnClick } from './trailer';
-import { onWatchedBtnClick } from './my-library-watched-queue/my-library-watched-queue'; //add
-import { onQueueBtnClick } from './my-library-watched-queue/my-library-watched-queue'; //add
+import { onTrailerBtnClick } from '../../features/trailer';
 
-const { modal, overflow, closeBtn, innerModal, body, sectionLibrary } = refs;
+const { allCardsSection, modal, overflow, closeBtn, innerModal, body } = refs;
 let queue;
 let watched;
 async function updateVar() {
@@ -26,12 +24,12 @@ async function updateVar() {
     watched = w.userDataWatch || [];
   }
 }
+//
 
 setTimeout(() => {
   updateVar();
 }, 2500);
-
-sectionLibrary.addEventListener('click', showModal);
+allCardsSection.addEventListener('click', showModal);
 
 async function updateMoviesList() {
   if (auth.currentUser === null) {
@@ -51,18 +49,17 @@ async function updateMoviesList() {
   }
 }
 export async function showModal(e) {
-  if (e.target.nodeName === 'IMG' || e.target.nodeName === 'SPAN') {
-    const main = document.querySelector('main');
-    const mainHeight = main.offsetHeight;
+  if (
+    e.target.nodeName === 'IMG' ||
+    e.target.className === 'title-modal-open' ||
+    e.target.className === 'trending-gallery__btn-more'
+  ) {
     innerModal.innerHTML = '';
-    const top = window.scrollY;
-    body.style.position = 'fixed';
-    body.style.top = `-${top}px`;
-    main.style.height = `${mainHeight}px`;
     modal.classList.remove('hidden-movie-modal');
     overflow.classList.remove('hidden-movie-modal');
     overflow.classList.add('overflow-height');
-    sectionLibrary.removeEventListener('click', showModal);
+
+    allCardsSection.removeEventListener('click', showModal);
     document.addEventListener('keydown', closeModalOnEsc);
     closeBtn.addEventListener('click', closeModal);
     overflow.addEventListener('click', closeModalOverflow);
@@ -72,10 +69,9 @@ export async function showModal(e) {
         ? e.target.dataset.id
         : e.target.closest('li').dataset.id;
     await createModal(id);
-    // const top = window.scrollY;
-    // body.style.position = 'fixed';
-    // body.style.top = `-${top}px`;
-    // main.style.height = `${mainHeight}px`;
+    const top = window.scrollY;
+    body.style.position = 'fixed';
+    body.style.top = `-${top}px`;
     const watchedBtn = document.querySelector('.modal__btn-watched');
     const queueBtn = document.querySelector('.modal__btn-queue');
     const watchTrailerBtn = document.querySelector(
@@ -87,6 +83,9 @@ export async function showModal(e) {
     } else {
       watchedBtn.setAttribute('disabled', 'disabled');
       queueBtn.setAttribute('disabled', 'disabled');
+      Notiflix.Notify.info(
+        'Log in and you will have the opportunity to create your own movies library'
+      );
     }
     watchTrailerBtn.addEventListener('click', onTrailerBtnClick);
   }
@@ -98,18 +97,16 @@ function closeModalOnEsc(e) {
   if (e.code === 'Escape') closeModal();
 }
 function closeModal() {
-  const main = document.querySelector('main');
   modal.classList.add('hidden-movie-modal');
   overflow.classList.add('hidden-movie-modal');
   overflow.classList.remove('overflow-height');
-  sectionLibrary.addEventListener('click', showModal);
+  allCardsSection.addEventListener('click', showModal);
   document.removeEventListener('keydown', closeModal);
   closeBtn.removeEventListener('click', closeModal);
   overflow.removeEventListener('click', closeModalOverflow);
   const top = body.style.top;
   body.style.position = '';
   body.style.top = '';
-  main.style.height = `auto`;
   window.scrollTo(0, parseInt(top || '0') * -1);
 }
 
@@ -117,6 +114,7 @@ async function createModal(id) {
   if (auth.currentUser === null) {
     const currentList = updateMoviesList();
     const rendered = await renderModal(currentList, id, watched, queue);
+    console.log('rendered', rendered);
     innerModal.innerHTML = rendered;
   } else {
     await updateVar();
@@ -154,7 +152,6 @@ async function handleWatched(e) {
         const saved = w.userDataWatch || [];
       }
 
-      onWatchedBtnClick();
       Notiflix.Notify.success('Added to watched!');
     }
   } else if (e.target.innerText === 'REMOVE FROM WATCHED') {
@@ -165,7 +162,6 @@ async function handleWatched(e) {
       await writeUserDataWatch(auth.currentUser.uid, watched);
     }
     e.target.innerText = 'Add to watched';
-    onWatchedBtnClick();
     Notiflix.Notify.success('Removed from watched!');
   }
 }
@@ -191,7 +187,7 @@ async function handleQueued(e) {
         await writeUserDataQueue(auth.currentUser.uid, queue);
       }
       e.target.innerText = 'Remove from queue';
-      onQueueBtnClick();
+
       Notiflix.Notify.success('Added to queue!');
     }
   } else if (e.target.innerText === 'REMOVE FROM QUEUE') {
@@ -203,7 +199,7 @@ async function handleQueued(e) {
     }
 
     e.target.innerText = 'Add to queue';
-    onQueueBtnClick();
+
     Notiflix.Notify.success('Removed from queue!');
   }
 }

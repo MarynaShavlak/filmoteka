@@ -3,7 +3,7 @@ export const refs = {
   filmsPaginationContainer: document.querySelector(
     '.films-pagination__container'
   ),
-  paginationContainer: '',
+
   allCardsSection: document.querySelector('.trending-gallery'),
   sectionLibrary: document.querySelector('.section-library'),
   modal: document.querySelector('.movie-modal'),

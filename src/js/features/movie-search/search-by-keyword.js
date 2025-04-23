@@ -1,4 +1,4 @@
-import makeHMTLString from '../templates/film_gallery_template';
+import makeHMTLString from './film_gallery_template';
 import {
   searchRefs,
   tmdbAPI,

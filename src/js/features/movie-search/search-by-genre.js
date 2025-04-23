@@ -1,4 +1,4 @@
-import { makeHMTLStringWithGenre } from '../templates/film_gallery_template';
+import { makeHMTLStringWithGenre } from './film_gallery_template';
 import {
   searchRefs,
   tmdbAPI,

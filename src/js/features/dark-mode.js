@@ -1,4 +1,4 @@
-import { refs } from './refs';
+import { refs } from '../utils/refs';
 const { darkToggleEl, darkToggleWindowEl, darkTogleLableEl } = refs;
 darkToggleWindowEl.addEventListener('click', onDarkToggleElClick);
 

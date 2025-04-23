@@ -1,4 +1,4 @@
-import makeHMTLString from '../templates/film_gallery_template';
+import makeHMTLString from './film_gallery_template';
 import {
   searchRefs,
   tmdbAPI,
@@ -14,7 +14,7 @@ import renderPopularFilms, {
   deletePaginationInterface,
   tooglePagination,
 } from '../trending-search-main/trending-search.js';
-import { canvasAnimation } from '../canvas-header.js';
+import { canvasAnimation } from '../../components/header/canvas-header.js';
 
 export let userAdvancedSearchForPagination = {
   primary_release_year: '',
@@ -89,7 +89,7 @@ function generateSelectOptions(form) {
 		</select>`;
   //forming exlude genre select HTML
   const excludeGenreHtmlStr = `
-		<select name="excludeGenre" 
+		<select name="excludeGenre"
 			class="advanced-search__exlude-genre advanced-search__select">
 			<option value="" class="advanced-search__option--main">Choose genre to exlude</option>
 			${genreOptionsHtmlStr}

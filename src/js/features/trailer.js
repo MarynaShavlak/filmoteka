@@ -1,4 +1,4 @@
-import TmdbAPI from './TMDB_API';
+import TmdbAPI from '../api/TMDB_API';
 import * as basicLightbox from 'basiclightbox';
 import Notiflix from 'notiflix';
 import { spinnerStart, spinnerStop } from './loader';
@@ -65,7 +65,7 @@ function modalClBtTrailer(instance) {
     `<button
         type="button"
         class="lightbox__button"
-        data-action="close-lightbox"           
+        data-action="close-lightbox"
         >
       </button>
     `

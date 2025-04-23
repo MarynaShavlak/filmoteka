@@ -2,7 +2,7 @@ import Notiflix from 'notiflix';
 import { renderMoviesLibrary } from './renderMoviesLibrary';
 import { spinnerStart, spinnerStop } from '../loader';
 import fetchPopularFilms from '../trending-search-main/fetch-movies';
-import { readAllUserData, currentUID, auth } from '../authFireBase.js';
+import { readAllUserData, currentUID, auth } from '../../auth/authFireBase.js';
 import { async } from '@firebase/util';
 
 const watchedBtnEl = document.querySelector('.js-library-btn--watched');
@@ -22,12 +22,12 @@ async function defaultLibrary() {
     <div><p class='library-gallery__default__title'>${films.results[1].title}</p>
     <p class='library-gallery__default-overview'>${films.results[1].overview}</p></div>
     </div>
-    
+
     <div class='library-gallery__default'><img class='library-gallery__default-poster' src=${IMG_PATH}${films.results[2].poster_path} data-id='${films.results[2].id}'>
     <div><p class='library-gallery__default__title'>${films.results[2].title}</p>
     <p class='library-gallery__default-overview'>${films.results[2].overview}</p></div>
     </div>
-    
+
     <div class='library-gallery__default'><img class='library-gallery__default-poster' src=${IMG_PATH}${films.results[3].poster_path} data-id='${films.results[3].id}'>
     <div><p class='library-gallery__default__title'>${films.results[3].title}</p>
     <p class='library-gallery__default-overview'>${films.results[3].overview}</p></div>

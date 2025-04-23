@@ -20,13 +20,13 @@ import {
   update,
 } from 'firebase/database';
 
-import { spinnerStart, spinnerStop } from './loader';
-import { onWatchedBtnClick } from './my-library-watched-queue/queueWatchAuthFunc.js';
+import { spinnerStart, spinnerStop } from '../features/loader';
+import { onWatchedBtnClick } from '../features/my-library-watched-queue/queueWatchAuthFunc.js';
 import {
   getValueFromLocalStorage,
   setValueInLocalStorage,
-} from './utils/localStorage.js';
-import { refs } from './refs.js';
+} from '../utils/localStorage.js';
+import { refs } from '../utils/refs.js';
 import {
   makeAuthFormInvisible,
   makeAuthFormVisible,
@@ -36,7 +36,7 @@ import {
   updateProfileEmail,
   updateProfileName,
   hideProfileModal,
-} from './openModalWindow.js';
+} from '../components/modal/openModalWindow.js';
 export let currentUID = '';
 
 const {
@@ -54,21 +54,13 @@ const {
 } = refs;
 
 const firebaseApp = initializeApp({
-  // apiKey: 'AIzaSyCCtjOeYUGfFakMk9BInb8D18c_-yBX2Oc',
-  // authDomain: 'filmoteka-e135b.firebaseapp.com',
-  // databaseURL:
-  //   'https://filmoteka-e135b-default-rtdb.europe-west1.firebasedatabase.app',
-  // projectId: 'filmoteka-e135b',
-  // storageBucket: 'filmoteka-e135b.appspot.com',
-  // messagingSenderId: '1055697661638',
-  // appId: '1:1055697661638:web:27ed1ccf73ceb81da0b1c7',
-  // measurementId: 'G-8186NK0FHL',
-  apiKey: 'AIzaSyBIV_g86G21H5fBy-2c7oEJCCpiSINt76g',
-  authDomain: 'filmoteka-e7147.firebaseapp.com',
-  projectId: 'filmoteka-e7147',
-  storageBucket: 'filmoteka-e7147.appspot.com',
-  messagingSenderId: '540904039422',
-  appId: '1:540904039422:web:621a4aa9dad13c768356af',
+  apiKey: "AIzaSyBIV_g86G21H5fBy-2c7oEJCCpiSINt76g",
+  authDomain: "filmoteka-e7147.firebaseapp.com",
+  databaseURL: "https://filmoteka-e7147-default-rtdb.firebaseio.com",
+  projectId: "filmoteka-e7147",
+  storageBucket: "filmoteka-e7147.firebasestorage.app",
+  messagingSenderId: "540904039422",
+  appId: "1:540904039422:web:621a4aa9dad13c768356af"
 });
 
 export const auth = getAuth(firebaseApp);

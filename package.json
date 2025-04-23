@@ -4,7 +4,7 @@
   "description": "",
   "homepage": "https://marynashavlak.github.io/filmoteka/",
   "scripts": {
-    "start": "parcel src/*.html -p 8888",
+    "start": "parcel src/*.html -p 8887",
     "build": "parcel build src/*.html --public-url /filmoteka/"
   },
   "repository": {
@@ -18,7 +18,6 @@
     "firebase": "^9.17.1",
     "modern-normalize": "^1.1.0",
     "notiflix": "^3.2.6",
-    "simplex-noise": "^4.0.1",
     "ultimate-pagination": "^1.0.0"
   },
   "devDependencies": {

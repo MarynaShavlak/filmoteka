@@ -1,4 +1,4 @@
-import { refs } from './refs';
+import { refs } from '../utils/refs';
 export const spinnerStart = () => {
   refs.backdropLoader.classList.remove('is-hidden');
 };

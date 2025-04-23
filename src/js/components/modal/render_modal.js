@@ -1,7 +1,8 @@
-import emptyPhoto from '../images/empty-photo/empty-poster.jpg';
-import { fetchMovie } from './fetch_movie_details';
-import { auth } from './authFireBase.js';
-import { calcImageSize } from './utils/calcWidthAndHeightImg.js';
+import emptyPhoto from '../../../images/empty-photo/empty-poster.jpg';
+import { fetchMovie } from '../../features/movie-details/fetch_movie_details';
+import { auth } from '../../auth/authFireBase.js';
+import { calcImageSize } from '../../utils/calcWidthAndHeightImg.js';
+
 export async function renderModal(list, id, watched, queue) {
   const movieDetails = await fetchMovie(id);
 

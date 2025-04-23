@@ -1,4 +1,4 @@
-import emptyphoto from '../../images/empty-photo/empty-poster.jpg';
+import emptyphoto from '../../../images/empty-photo/empty-poster.jpg';
 // import TmdbAPI from '../TMDB_API';
 
 const IMG_PATH = 'https://image.tmdb.org/t/p/original';
@@ -46,7 +46,7 @@ export function renderMoviesLibrary(movie) {
 
   const markUp = `
 	<li class='trending-gallery__item' data-id='${id}'>
-  
+
     <img src="${poster}" alt="The poster of ${title} film" class="library-gallery__image" data-id='${id}'/>
     <div class="trending-gallery__wrapper">
     	<h3 class='trending-gallery__title' data-id='${id}'><span class="title-modal-open">${title}</span></h3>
@@ -54,8 +54,8 @@ export function renderMoviesLibrary(movie) {
         ', '
       )} | <span class='movie-year'>${releaseDate}</span> <span class='movie-rating'>${voteAverageFixed}</span></p>
     </div>
-    
-    
+
+
   </li>
 	`;
 

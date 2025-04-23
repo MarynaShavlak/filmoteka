@@ -1,5 +1,5 @@
 import { Notify } from 'notiflix';
-import TmdbAPI from '../TMDB_API';
+import TmdbAPI from '../../api/TMDB_API';
 
 const emptyStingRegEx = /^\s*$/; // regular expression of an empty string
 const tmdbAPI = new TmdbAPI();

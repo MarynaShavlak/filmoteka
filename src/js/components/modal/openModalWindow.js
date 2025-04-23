@@ -1,9 +1,9 @@
-import { refs } from './refs';
-import { userIcon, lockIcon } from './utils/markup.js';
+import { refs } from '../../utils/refs';
+import { userIcon, lockIcon } from '../../utils/markup.js';
 import {
   getValueFromLocalStorage,
   setValueInLocalStorage,
-} from './utils/localStorage.js';
+} from '../../utils/localStorage.js';
 
 const {
   body,
